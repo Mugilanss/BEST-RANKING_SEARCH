@@ -1,0 +1,48 @@
+.result-card {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.1s;
+}
+.result-card:hover {
+  border-color: #38bdf8;
+  transform: translateY(-1px);
+}
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.2rem;
+}
+.result-filename {
+  font-weight: 700;
+  color: #38bdf8;
+  font-size: 1rem;
+}
+.result-score {
+  font-size: 0.78rem;
+  color: #64748b;
+  background: #0f172a;
+  padding: 2px 8px;
+  border-radius: 99px;
+}
+.result-path {
+  font-size: 0.78rem;
+  color: #475569;
+  margin-bottom: 0.5rem;
+  word-break: break-all;
+}
+.result-snippet {
+  font-size: 0.9rem;
+  color: #cbd5e1;
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+}
+.result-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.78rem;
+  color: #64748b;
+}

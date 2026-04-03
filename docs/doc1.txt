@@ -1,0 +1,8 @@
+This project implements a mini search engine in C++.
+The engine supports indexing, ranking, and searching text documents.
+
+An inverted index is built using sharded posting lists.
+Each posting stores the document identifier and token positions.
+
+The system supports phrase queries, BM25 scoring, and TF-IDF scoring.
+Parallel execution allows the engine to scale efficiently on multi-core systems.

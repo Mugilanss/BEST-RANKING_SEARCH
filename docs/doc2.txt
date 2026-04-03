@@ -1,0 +1,8 @@
+Information retrieval systems rely on inverted indexes.
+An inverted index maps terms to the documents where they appear.
+
+Phrase search requires positional information.
+If a document contains the phrase search engine in the correct order, it should rank higher.
+
+BM25 is a probabilistic ranking function.
+It improves upon TF-IDF by normalizing document length and term frequency.
