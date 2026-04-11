@@ -43,8 +43,14 @@ void APIServer::run(const std::string &configPath,
               << "  GET  /document/<id>\n"
               << "  GET  /stats\n"
               << "  GET  /autocomplete?q=<prefix>&k=<n>\n"
-              << "  POST /index/rebuild\n"
-              << "  POST /index/update\n";
+              << "  GET  /popular?k=<n>\n"
+              << "  GET  /health\n"
+              << "  GET  /metrics (ADMIN)\n"
+              << "  POST /index/rebuild (ADMIN)\n"
+              << "  POST /index/update (ADMIN)\n"
+              << "  POST /crawl?url=<url>&depth=<n>&pages=<m> (ADMIN)\n"
+              << "\nAuthentication: Set SEARCH_ADMIN_TOKEN env var or use default 'admin'\n"
+              << "Rate limiting: 60 requests per 60 seconds per IP:endpoint\n";
 
     if (!srv.listen(host.c_str(), port)) {
         Logger::instance().log(LERROR, "Failed to bind " + host + ":" + std::to_string(port));

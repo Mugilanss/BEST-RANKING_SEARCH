@@ -21,10 +21,10 @@ struct Posting {
 
 struct Document {
     std::string path;
-    std::string content;
     uint64_t size_bytes = 0;
     time_t mtime = 0;
     double norm = 0.0;
+    // content is NOT stored in memory — loaded on demand via loadContent()
 };
 
 struct ScoredDoc {
@@ -47,7 +47,12 @@ public:
     // Build
     void buildFromFolder(const std::string &folder, bool recursive = true);
     void buildFromFolderParallel(const std::string &folder, bool recursive = true);
+    void buildFromFileList(const std::vector<std::string> &files);  // for ShardRouter
     void incrementalUpdateWithWAL(const std::string &folder, WAL &wal, bool recursive = true);
+
+    // Sync: detects added, deleted, and modified files — no WAL needed
+    struct SyncResult { int added = 0; int removed = 0; int modified = 0; };
+    SyncResult syncFolder(const std::string &folder, bool recursive = true);
 
     // Persistence
     bool saveIndex(const std::string &filename) const;
@@ -59,6 +64,7 @@ public:
 
     // Postings access
     std::unordered_set<int> getDocIDsForTerm(const std::string &term) const;
+    std::vector<int>        getDocIDsSorted(const std::string &term) const;  // sorted, for merge ops
     const std::vector<Posting>* getPostings(const std::string &term) const;
     bool docHasPhrase(int docID, const std::vector<std::string> &terms) const;
 
@@ -67,6 +73,8 @@ public:
     const Document& getDoc(int id) const;
     void removeDocument(int docID);
     std::string makeSnippet(int docID, const std::vector<std::string> &qterms, size_t window) const;
+    // Lazy content load — reads from disk, caches in contentCache
+    std::string loadContent(int docID) const;
 
     // BM25 helpers
     int dfCount(const std::string &term) const;
@@ -103,6 +111,10 @@ private:
     std::string loadFileContent(const std::string &path) const;
     uint64_t fileHash(const std::string &path) const;
     const std::string* lookupTermPtr(const std::string &term) const;
+    
+    // Persistence helpers for versioning and compression
+    bool loadIndexFromStream(std::istream &stream);
+    bool finalizeLegacyLoad();
 
     std::vector<Document> docs;
     std::vector<std::unordered_map<const std::string*, double>> docTf;
@@ -123,6 +135,11 @@ private:
     int maxThreads = 4;
     double avgDocLenCache = 0.0;
     std::string extFilter;
+
+    // LRU content cache: stores recently accessed doc content (max 200 docs)
+    mutable std::unordered_map<int, std::string> contentCache;
+    mutable std::mutex contentCacheMu;
+    static constexpr int kContentCacheMax = 200;
 
     Trie*   trie = nullptr;
     BKTree* bk   = nullptr;

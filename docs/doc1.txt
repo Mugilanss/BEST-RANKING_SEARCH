@@ -4,5 +4,11 @@ The engine supports indexing, ranking, and searching text documents.
 An inverted index is built using sharded posting lists.
 Each posting stores the document identifier and token positions.
 
-The system supports phrase queries, BM25 scoring, and TF-IDF scoring.
-Parallel execution allows the engine to scale efficiently on multi-core systems.
+Phrase search requires positional information.
+If a document contains the phrase search engine in the correct order, it should rank higher.
+
+BM25 is a probabilistic ranking function.
+It improves upon TF-IDF by normalizing document length and term frequency.
+
+echo bm25 is better than tf idf for long documents
+echo inverted index enables fast text search

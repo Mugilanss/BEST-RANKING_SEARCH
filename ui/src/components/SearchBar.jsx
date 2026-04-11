@@ -40,28 +40,40 @@ export default function SearchBar({ onSearch, loading }) {
 
   return (
     <div className="searchbar-wrap">
+      <div className="searchbar-glow" />
       <div className="searchbar-row">
+        <span className="searchbar-icon">🔍</span>
         <input
           ref={inputRef}
           className="searchbar-input"
           type="text"
-          placeholder='Search… (AND / OR / NOT / "phrase")'
+          placeholder='Search… try AND / OR / NOT / "phrase"'
           value={query}
           onChange={e => { setQuery(e.target.value); setShowSug(true); }}
           onKeyDown={e => e.key === "Enter" && submit()}
           onFocus={() => setShowSug(true)}
           onBlur={() => setTimeout(() => setShowSug(false), 150)}
           autoComplete="off"
+          spellCheck="false"
         />
+        <div className="searchbar-divider" />
         <button className="searchbar-btn" onClick={() => submit()} disabled={loading}>
-          {loading ? "…" : "Search"}
+          {loading ? (
+            <><span className="searchbar-spinner" /> Searching</>
+          ) : (
+            <>Search</>
+          )}
         </button>
       </div>
       {showSug && suggestions.length > 0 && (
         <ul className="suggestions">
           {suggestions.map((s, i) => (
             <li key={i} onMouseDown={() => pickSuggestion(s.term)}>
-              {s.term} <span className="sug-freq">({s.freq})</span>
+              <span className="sug-term">
+                <span className="sug-term-icon">↩</span>
+                {s.term}
+              </span>
+              <span className="sug-freq">{s.freq} docs</span>
             </li>
           ))}
         </ul>

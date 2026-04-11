@@ -1,2 +1,0 @@
-echo bm25 is better than tf idf for long documents > docs\doc2.txt
-echo inverted index enables fast text search > docs\doc3.txt

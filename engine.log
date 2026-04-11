@@ -960,3 +960,475 @@ counters: { }
 2026-04-03 12:31:15 [INFO] METRICS: queries=1, cacheHits=1, avgLatencyMs=0, cacheHitRate=100
 [latency-buckets: 1ms=1, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
 counters: { }
+2026-04-06 17:59:59 [INFO] Server: loaded index C:\cppsearch\index.bin
+2026-04-06 17:59:59 [INFO] Preloaded 3 hot docs into memory
+2026-04-06 17:59:59 [INFO] Cache prewarmed with 9 historical queries
+2026-04-06 18:00:29 [INFO] METRICS: queries=0, cacheHits=0, avgLatencyMs=0, cacheHitRate=0
+[latency-buckets: 1ms=0, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:00:32 [INFO] GET /autocomplete -> 200
+2026-04-06 18:00:33 [INFO] GET /autocomplete -> 200
+2026-04-06 18:00:34 [INFO] GET /search -> 200
+2026-04-06 18:00:34 [INFO] GET /autocomplete -> 200
+2026-04-06 18:00:38 [INFO] GET /document/1 -> 200
+2026-04-06 18:00:38 [INFO] GET /document/1 -> 200
+2026-04-06 18:00:46 [INFO] GET /stats -> 200
+2026-04-06 18:00:47 [INFO] GET /stats -> 200
+2026-04-06 18:00:51 [INFO] GET /stats -> 200
+2026-04-06 18:00:51 [INFO] GET /stats -> 200
+2026-04-06 18:00:59 [INFO] METRICS: queries=1, cacheHits=0, avgLatencyMs=0, cacheHitRate=0
+[latency-buckets: 1ms=1, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:01:29 [INFO] METRICS: queries=1, cacheHits=0, avgLatencyMs=0, cacheHitRate=0
+[latency-buckets: 1ms=1, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:01:44 [INFO] GET /stats -> 200
+2026-04-06 18:01:44 [INFO] GET /stats -> 200
+2026-04-06 18:01:48 [INFO] GET /stats -> 200
+2026-04-06 18:01:49 [INFO] GET /stats -> 200
+2026-04-06 18:01:50 [INFO] GET /stats -> 200
+2026-04-06 18:01:50 [INFO] GET /stats -> 200
+2026-04-06 18:01:50 [INFO] GET /stats -> 200
+2026-04-06 18:01:50 [INFO] GET /stats -> 200
+2026-04-06 18:01:56 [INFO] GET /autocomplete -> 200
+2026-04-06 18:01:58 [INFO] GET /search -> 200
+2026-04-06 18:01:59 [INFO] GET /autocomplete -> 200
+2026-04-06 18:01:59 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:02:01 [INFO] GET /document/1 -> 200
+2026-04-06 18:02:01 [INFO] GET /document/1 -> 200
+2026-04-06 18:02:12 [INFO] GET /autocomplete -> 200
+2026-04-06 18:02:12 [INFO] GET /autocomplete -> 200
+2026-04-06 18:02:13 [INFO] GET /search -> 200
+2026-04-06 18:02:13 [INFO] GET /autocomplete -> 200
+2026-04-06 18:02:16 [INFO] GET /document/0 -> 200
+2026-04-06 18:02:16 [INFO] GET /document/0 -> 200
+2026-04-06 18:02:29 [INFO] METRICS: queries=3, cacheHits=1, avgLatencyMs=0, cacheHitRate=33.3333
+[latency-buckets: 1ms=3, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:02:59 [INFO] METRICS: queries=3, cacheHits=1, avgLatencyMs=0, cacheHitRate=33.3333
+[latency-buckets: 1ms=3, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:12:08 [INFO] Starting parallel indexing on: C:\cppsearch\docs
+2026-04-06 18:12:08 [INFO] Parallel indexing finished. Docs=1
+2026-04-06 18:12:08 [INFO] Preloaded 1 hot docs into memory
+2026-04-06 18:12:08 [INFO] Cache prewarmed with 10 historical queries
+2026-04-06 18:12:11 [INFO] GET /document/1 -> 404
+2026-04-06 18:12:18 [INFO] GET /stats -> 200
+2026-04-06 18:12:18 [INFO] GET /stats -> 200
+2026-04-06 18:12:25 [INFO] GET /autocomplete -> 200
+2026-04-06 18:12:26 [INFO] GET /autocomplete -> 200
+2026-04-06 18:12:27 [INFO] GET /autocomplete -> 200
+2026-04-06 18:12:27 [INFO] GET /autocomplete -> 200
+2026-04-06 18:12:28 [INFO] GET /autocomplete -> 200
+2026-04-06 18:12:30 [INFO] GET /autocomplete -> 200
+2026-04-06 18:12:32 [INFO] GET /search -> 200
+2026-04-06 18:12:32 [INFO] GET /autocomplete -> 200
+2026-04-06 18:12:33 [INFO] GET /document/0 -> 200
+2026-04-06 18:12:33 [INFO] GET /document/0 -> 200
+2026-04-06 18:12:38 [INFO] METRICS: queries=1, cacheHits=1, avgLatencyMs=0, cacheHitRate=100
+[latency-buckets: 1ms=1, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:13:08 [INFO] METRICS: queries=1, cacheHits=1, avgLatencyMs=0, cacheHitRate=100
+[latency-buckets: 1ms=1, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:13:38 [INFO] METRICS: queries=1, cacheHits=1, avgLatencyMs=0, cacheHitRate=100
+[latency-buckets: 1ms=1, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:14:08 [INFO] METRICS: queries=1, cacheHits=1, avgLatencyMs=0, cacheHitRate=100
+[latency-buckets: 1ms=1, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:14:38 [INFO] METRICS: queries=1, cacheHits=1, avgLatencyMs=0, cacheHitRate=100
+[latency-buckets: 1ms=1, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:15:08 [INFO] METRICS: queries=1, cacheHits=1, avgLatencyMs=0, cacheHitRate=100
+[latency-buckets: 1ms=1, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:15:38 [INFO] METRICS: queries=1, cacheHits=1, avgLatencyMs=0, cacheHitRate=100
+[latency-buckets: 1ms=1, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:17:11 [INFO] Server: loaded index C:\cppsearch\index.bin
+2026-04-06 18:17:11 [INFO] Preloaded 1 hot docs into memory
+2026-04-06 18:17:11 [INFO] Cache prewarmed with 10 historical queries
+2026-04-06 18:17:19 [INFO] GET /stats -> 200
+2026-04-06 18:17:19 [INFO] GET /stats -> 200
+2026-04-06 18:17:20 [INFO] GET /stats -> 200
+2026-04-06 18:17:26 [INFO] GET /autocomplete -> 200
+2026-04-06 18:17:28 [INFO] GET /search -> 200
+2026-04-06 18:17:28 [INFO] GET /autocomplete -> 200
+2026-04-06 18:17:31 [INFO] GET /document/0 -> 200
+2026-04-06 18:17:31 [INFO] GET /document/0 -> 200
+2026-04-06 18:17:36 [INFO] GET /autocomplete -> 200
+2026-04-06 18:17:37 [INFO] GET /autocomplete -> 200
+2026-04-06 18:17:38 [INFO] GET /autocomplete -> 200
+2026-04-06 18:17:39 [INFO] GET /search -> 200
+2026-04-06 18:17:39 [INFO] GET /autocomplete -> 200
+2026-04-06 18:17:41 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:18:11 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:18:41 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:18:45 [INFO] GET /document/0 -> 200
+2026-04-06 18:18:45 [INFO] GET /document/0 -> 200
+2026-04-06 18:19:11 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:19:41 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:19:56 [INFO] GET /stats -> 200
+2026-04-06 18:19:56 [INFO] GET /stats -> 200
+2026-04-06 18:20:11 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:20:41 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:21:11 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:21:41 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:22:11 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:22:41 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:23:11 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:23:41 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:24:11 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:24:41 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:25:11 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:25:41 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:26:11 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:26:41 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:27:11 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:27:41 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:28:11 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:28:41 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:29:11 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:29:41 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:30:11 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:30:41 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:31:11 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:31:41 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:32:11 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:32:41 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:33:11 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:33:41 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:34:11 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:34:41 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:35:11 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:35:41 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:36:11 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:36:41 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:37:11 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:37:41 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:38:11 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:38:41 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:39:11 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:39:41 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:40:11 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:40:41 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:45:24 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:45:54 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:46:24 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:46:54 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:47:24 [INFO] METRICS: queries=2, cacheHits=1, avgLatencyMs=0, cacheHitRate=50
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:50:38 [INFO] Server: loaded index C:\cppsearch\index.bin
+2026-04-06 18:50:38 [INFO] Preloaded 1 hot docs into memory
+2026-04-06 18:50:38 [INFO] Cache prewarmed with 10 historical queries
+2026-04-06 18:51:03 [INFO] GET /stats -> 200
+2026-04-06 18:51:07 [INFO] Starting parallel indexing on: C:\cppsearch\docs
+2026-04-06 18:51:07 [INFO] Parallel indexing finished. Docs=1
+2026-04-06 18:51:07 [INFO] Cache prewarmed with 10 historical queries
+2026-04-06 18:51:07 [INFO] POST /index/rebuild -> 200
+2026-04-06 18:51:08 [INFO] METRICS: queries=0, cacheHits=0, avgLatencyMs=0, cacheHitRate=0
+[latency-buckets: 1ms=0, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:51:09 [INFO] syncFolder done: +0 -0 ~0
+2026-04-06 18:51:09 [INFO] POST /index/update -> 200
+2026-04-06 18:51:33 [INFO] GET /autocomplete -> 200
+2026-04-06 18:51:34 [INFO] GET /autocomplete -> 200
+2026-04-06 18:51:36 [INFO] GET /search -> 200
+2026-04-06 18:51:36 [INFO] GET /autocomplete -> 200
+2026-04-06 18:51:38 [INFO] METRICS: queries=1, cacheHits=0, avgLatencyMs=0, cacheHitRate=0
+[latency-buckets: 1ms=1, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:51:38 [INFO] GET /document/0 -> 200
+2026-04-06 18:51:38 [INFO] GET /document/0 -> 200
+2026-04-06 18:52:08 [INFO] METRICS: queries=1, cacheHits=0, avgLatencyMs=0, cacheHitRate=0
+[latency-buckets: 1ms=1, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:52:38 [INFO] METRICS: queries=1, cacheHits=0, avgLatencyMs=0, cacheHitRate=0
+[latency-buckets: 1ms=1, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:53:08 [INFO] METRICS: queries=1, cacheHits=0, avgLatencyMs=0, cacheHitRate=0
+[latency-buckets: 1ms=1, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:53:38 [INFO] METRICS: queries=1, cacheHits=0, avgLatencyMs=0, cacheHitRate=0
+[latency-buckets: 1ms=1, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 18:54:08 [INFO] METRICS: queries=1, cacheHits=0, avgLatencyMs=0, cacheHitRate=0
+[latency-buckets: 1ms=1, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 19:06:46 [INFO] Server: loaded index C:\cppsearch\index.bin
+2026-04-06 19:06:46 [INFO] Preloaded 1 hot docs into content cache
+2026-04-06 19:06:46 [INFO] Cache prewarmed with 10 historical queries
+2026-04-06 19:06:51 [INFO] GET /autocomplete -> 200
+2026-04-06 19:06:51 [INFO] GET /autocomplete -> 200
+2026-04-06 19:06:54 [INFO] GET /autocomplete -> 200
+2026-04-06 19:06:55 [INFO] GET /autocomplete -> 200
+2026-04-06 19:06:57 [INFO] GET /search -> 200
+2026-04-06 19:07:02 [INFO] GET /document/0 -> 200
+2026-04-06 19:07:02 [INFO] GET /document/0 -> 200
+2026-04-06 19:07:03 [INFO] GET /stats -> 200
+2026-04-06 19:07:03 [INFO] GET /stats -> 200
+2026-04-06 19:07:16 [INFO] METRICS: queries=1, cacheHits=0, avgLatencyMs=0, cacheHitRate=0
+[latency-buckets: 1ms=1, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 19:07:46 [INFO] METRICS: queries=1, cacheHits=0, avgLatencyMs=0, cacheHitRate=0
+[latency-buckets: 1ms=1, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 19:08:16 [INFO] METRICS: queries=1, cacheHits=0, avgLatencyMs=0, cacheHitRate=0
+[latency-buckets: 1ms=1, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 19:08:46 [INFO] METRICS: queries=1, cacheHits=0, avgLatencyMs=0, cacheHitRate=0
+[latency-buckets: 1ms=1, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 19:09:16 [INFO] METRICS: queries=1, cacheHits=0, avgLatencyMs=0, cacheHitRate=0
+[latency-buckets: 1ms=1, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 19:09:46 [INFO] METRICS: queries=1, cacheHits=0, avgLatencyMs=0, cacheHitRate=0
+[latency-buckets: 1ms=1, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 19:09:53 [INFO] syncFolder done: +1 -0 ~0
+2026-04-06 19:09:53 [INFO] POST /index/update -> 200
+2026-04-06 19:10:00 [INFO] GET /autocomplete -> 200
+2026-04-06 19:10:01 [INFO] GET /autocomplete -> 200
+2026-04-06 19:10:02 [INFO] GET /autocomplete -> 200
+2026-04-06 19:10:03 [INFO] GET /search -> 200
+2026-04-06 19:10:03 [INFO] GET /autocomplete -> 200
+2026-04-06 19:10:16 [INFO] METRICS: queries=2, cacheHits=0, avgLatencyMs=0, cacheHitRate=0
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 19:14:22 [INFO] Server: loaded index C:\cppsearch\index.bin
+2026-04-06 19:14:22 [INFO] Preloaded 2 hot docs into content cache
+2026-04-06 19:14:22 [INFO] Cache prewarmed with 10 historical queries
+2026-04-06 19:14:44 [INFO] GET /autocomplete -> 200
+2026-04-06 19:14:46 [INFO] GET /search -> 200
+2026-04-06 19:14:46 [INFO] GET /autocomplete -> 200
+2026-04-06 19:14:48 [INFO] GET /autocomplete -> 200
+2026-04-06 19:14:50 [INFO] GET /autocomplete -> 200
+2026-04-06 19:14:51 [INFO] GET /autocomplete -> 200
+2026-04-06 19:14:52 [INFO] GET /search -> 200
+2026-04-06 19:14:52 [INFO] GET /autocomplete -> 200
+2026-04-06 19:14:52 [INFO] METRICS: queries=2, cacheHits=2, avgLatencyMs=0, cacheHitRate=100
+[latency-buckets: 1ms=2, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 19:14:54 [INFO] GET /document/0 -> 200
+2026-04-06 19:14:54 [INFO] GET /document/0 -> 200
+2026-04-06 19:14:58 [INFO] syncFolder done: +0 -0 ~0
+2026-04-06 19:14:58 [INFO] POST /index/update -> 200
+2026-04-06 19:14:59 [INFO] Starting parallel indexing on: C:\cppsearch\docs
+2026-04-06 19:14:59 [INFO] Parallel indexing finished. Docs=2
+2026-04-06 19:15:00 [INFO] Cache prewarmed with 10 historical queries
+2026-04-06 19:15:00 [INFO] POST /index/rebuild -> 200
+2026-04-06 19:15:04 [INFO] GET /autocomplete -> 200
+2026-04-06 19:15:05 [INFO] GET /autocomplete -> 200
+2026-04-06 19:15:06 [INFO] GET /autocomplete -> 200
+2026-04-06 19:15:07 [INFO] GET /search -> 200
+2026-04-06 19:15:07 [INFO] GET /autocomplete -> 200
+2026-04-06 19:15:08 [INFO] GET /document/0 -> 200
+2026-04-06 19:15:08 [INFO] GET /document/0 -> 200
+2026-04-06 19:15:14 [INFO] GET /autocomplete -> 200
+2026-04-06 19:15:15 [INFO] GET /search -> 200
+2026-04-06 19:15:15 [INFO] GET /autocomplete -> 200
+2026-04-06 19:15:19 [INFO] GET /search -> 200
+2026-04-06 19:15:20 [INFO] GET /search -> 200
+2026-04-06 19:15:22 [INFO] GET /search -> 200
+2026-04-06 19:15:22 [INFO] METRICS: queries=7, cacheHits=7, avgLatencyMs=0, cacheHitRate=100
+[latency-buckets: 1ms=7, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 19:15:25 [INFO] GET /document/0 -> 200
+2026-04-06 19:15:25 [INFO] GET /document/0 -> 200
+2026-04-06 19:15:52 [INFO] METRICS: queries=7, cacheHits=7, avgLatencyMs=0, cacheHitRate=100
+[latency-buckets: 1ms=7, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 19:16:22 [INFO] METRICS: queries=7, cacheHits=7, avgLatencyMs=0, cacheHitRate=100
+[latency-buckets: 1ms=7, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-06 19:16:30 [INFO] GET /autocomplete -> 200
+2026-04-06 19:16:30 [INFO] GET /autocomplete -> 200
+2026-04-06 19:16:33 [INFO] GET /search -> 200
+2026-04-06 19:16:33 [INFO] GET /autocomplete -> 200
+2026-04-06 19:16:41 [INFO] GET /stats -> 200
+2026-04-06 19:16:41 [INFO] GET /stats -> 200
+2026-04-06 19:16:52 [INFO] METRICS: queries=8, cacheHits=7, avgLatencyMs=0, cacheHitRate=87.5
+[latency-buckets: 1ms=8, 2ms=0, 4ms=0, 8ms=0, 16ms=0, 32ms=0, 64ms=0, 128ms=0, 256ms=0, 512ms=0, 1024ms=0, 2048ms=0, 4096ms=0, 8192ms=0, 16384ms=0, 32768ms=0, 65536ms=0, 131072ms=0, 262144ms=0, 524288ms=0, 1048576ms=0, 2097152ms=0, 4194304ms=0, 8388608ms=0, 16777216ms=0, 33554432ms=0, 67108864ms=0, 134217728ms=0, 268435456ms=0, 536870912ms=0, 1073741824ms=0, 2147483648ms=0]
+counters: { }
+2026-04-08 15:57:59 [INFO] Loading legacy index format (IDX1, uncompressed)
+2026-04-08 15:57:59 [INFO] Server: loaded index C:\cppsearch\index.bin
+2026-04-08 15:57:59 [INFO] Preloaded 2 hot docs into content cache
+2026-04-08 15:57:59 [INFO] Cache prewarmed with 10 historical queries
+2026-04-08 15:58:29 [INFO] METRICS:
+QUERY METRICS:
+  queries=0, cacheHits=0, avgLatencyMs=0.00, cacheHitRate=0.00%
+ERROR METRICS:
+  errorCount=0
+INDEXING METRICS:
+  docsIndexed=0
+[latency-buckets (ms): 1=0, 2=0, 4=0, 8=0, 16=0, 32=0, 64=0, 128=0, 256=0, 512=0, 1024=0, 2048=0, 4096=0, 8192=0, 16384=0, 32768=0, 65536=0, 131072=0, 262144=0, 524288=0, 1048576=0, 2097152=0, 4194304=0, 8388608=0, 16777216=0, 33554432=0, 67108864=0, 134217728=0, 268435456=0, 536870912=0, 1073741824=0, 2147483648=0]
+
+2026-04-08 15:58:59 [INFO] METRICS:
+QUERY METRICS:
+  queries=0, cacheHits=0, avgLatencyMs=0.00, cacheHitRate=0.00%
+ERROR METRICS:
+  errorCount=0
+INDEXING METRICS:
+  docsIndexed=0
+[latency-buckets (ms): 1=0, 2=0, 4=0, 8=0, 16=0, 32=0, 64=0, 128=0, 256=0, 512=0, 1024=0, 2048=0, 4096=0, 8192=0, 16384=0, 32768=0, 65536=0, 131072=0, 262144=0, 524288=0, 1048576=0, 2097152=0, 4194304=0, 8388608=0, 16777216=0, 33554432=0, 67108864=0, 134217728=0, 268435456=0, 536870912=0, 1073741824=0, 2147483648=0]
+
+2026-04-08 15:59:30 [INFO] METRICS:
+QUERY METRICS:
+  queries=0, cacheHits=0, avgLatencyMs=0.00, cacheHitRate=0.00%
+ERROR METRICS:
+  errorCount=0
+INDEXING METRICS:
+  docsIndexed=0
+[latency-buckets (ms): 1=0, 2=0, 4=0, 8=0, 16=0, 32=0, 64=0, 128=0, 256=0, 512=0, 1024=0, 2048=0, 4096=0, 8192=0, 16384=0, 32768=0, 65536=0, 131072=0, 262144=0, 524288=0, 1048576=0, 2097152=0, 4194304=0, 8388608=0, 16777216=0, 33554432=0, 67108864=0, 134217728=0, 268435456=0, 536870912=0, 1073741824=0, 2147483648=0]
+
+2026-04-08 16:00:00 [INFO] METRICS:
+QUERY METRICS:
+  queries=0, cacheHits=0, avgLatencyMs=0.00, cacheHitRate=0.00%
+ERROR METRICS:
+  errorCount=0
+INDEXING METRICS:
+  docsIndexed=0
+[latency-buckets (ms): 1=0, 2=0, 4=0, 8=0, 16=0, 32=0, 64=0, 128=0, 256=0, 512=0, 1024=0, 2048=0, 4096=0, 8192=0, 16384=0, 32768=0, 65536=0, 131072=0, 262144=0, 524288=0, 1048576=0, 2097152=0, 4194304=0, 8388608=0, 16777216=0, 33554432=0, 67108864=0, 134217728=0, 268435456=0, 536870912=0, 1073741824=0, 2147483648=0]
+
+2026-04-08 16:00:30 [INFO] METRICS:
+QUERY METRICS:
+  queries=0, cacheHits=0, avgLatencyMs=0.00, cacheHitRate=0.00%
+ERROR METRICS:
+  errorCount=0
+INDEXING METRICS:
+  docsIndexed=0
+[latency-buckets (ms): 1=0, 2=0, 4=0, 8=0, 16=0, 32=0, 64=0, 128=0, 256=0, 512=0, 1024=0, 2048=0, 4096=0, 8192=0, 16384=0, 32768=0, 65536=0, 131072=0, 262144=0, 524288=0, 1048576=0, 2097152=0, 4194304=0, 8388608=0, 16777216=0, 33554432=0, 67108864=0, 134217728=0, 268435456=0, 536870912=0, 1073741824=0, 2147483648=0]
+
+2026-04-08 16:01:00 [INFO] METRICS:
+QUERY METRICS:
+  queries=0, cacheHits=0, avgLatencyMs=0.00, cacheHitRate=0.00%
+ERROR METRICS:
+  errorCount=0
+INDEXING METRICS:
+  docsIndexed=0
+[latency-buckets (ms): 1=0, 2=0, 4=0, 8=0, 16=0, 32=0, 64=0, 128=0, 256=0, 512=0, 1024=0, 2048=0, 4096=0, 8192=0, 16384=0, 32768=0, 65536=0, 131072=0, 262144=0, 524288=0, 1048576=0, 2097152=0, 4194304=0, 8388608=0, 16777216=0, 33554432=0, 67108864=0, 134217728=0, 268435456=0, 536870912=0, 1073741824=0, 2147483648=0]
+
+2026-04-08 16:01:30 [INFO] METRICS:
+QUERY METRICS:
+  queries=0, cacheHits=0, avgLatencyMs=0.00, cacheHitRate=0.00%
+ERROR METRICS:
+  errorCount=0
+INDEXING METRICS:
+  docsIndexed=0
+[latency-buckets (ms): 1=0, 2=0, 4=0, 8=0, 16=0, 32=0, 64=0, 128=0, 256=0, 512=0, 1024=0, 2048=0, 4096=0, 8192=0, 16384=0, 32768=0, 65536=0, 131072=0, 262144=0, 524288=0, 1048576=0, 2097152=0, 4194304=0, 8388608=0, 16777216=0, 33554432=0, 67108864=0, 134217728=0, 268435456=0, 536870912=0, 1073741824=0, 2147483648=0]
+
+2026-04-08 16:02:00 [INFO] METRICS:
+QUERY METRICS:
+  queries=0, cacheHits=0, avgLatencyMs=0.00, cacheHitRate=0.00%
+ERROR METRICS:
+  errorCount=0
+INDEXING METRICS:
+  docsIndexed=0
+[latency-buckets (ms): 1=0, 2=0, 4=0, 8=0, 16=0, 32=0, 64=0, 128=0, 256=0, 512=0, 1024=0, 2048=0, 4096=0, 8192=0, 16384=0, 32768=0, 65536=0, 131072=0, 262144=0, 524288=0, 1048576=0, 2097152=0, 4194304=0, 8388608=0, 16777216=0, 33554432=0, 67108864=0, 134217728=0, 268435456=0, 536870912=0, 1073741824=0, 2147483648=0]
+

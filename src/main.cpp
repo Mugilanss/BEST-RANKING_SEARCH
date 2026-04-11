@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <thread>
 #include <sstream>
+#include <fstream>
+#include <filesystem>
 
 #include "config.h"
 #include "logger.h"
@@ -48,13 +50,35 @@ static void printHelp() {
         "  <query>            search (supports AND/OR/NOT, \"phrases\")\n";
 }
 
-int main(int argc, char **argv) {
+int main(int /*argc*/, char ** /*argv*/) {
 
     //----------------------------------------------------------------------
-    // Load configuration
+    // Load configuration — find config.ini relative to the executable
     //----------------------------------------------------------------------
+    std::string configPath = "src/config.ini";
+    {
+        for (auto &candidate : {"../src/config.ini", "../../src/config.ini", "src/config.ini"}) {
+            std::ifstream t(candidate);
+            if (t.good()) { configPath = candidate; break; }
+        }
+    }
+
     Config cfg;
-    cfg.loadFromFile("config.ini");
+    cfg.loadFromFile(configPath);
+
+    // Resolve all relative paths against the config file's directory
+    namespace fs = std::filesystem;
+    std::string baseDir = fs::path(configPath).parent_path().string();
+    auto resolve = [&](const std::string &p) -> std::string {
+        fs::path fp(p);
+        if (fp.is_absolute()) return p;
+        return fs::weakly_canonical(fs::path(baseDir) / fp).string();
+    };
+    cfg.docsFolder = resolve(cfg.docsFolder);
+    cfg.indexFile  = resolve(cfg.indexFile);
+    cfg.walFile    = resolve(cfg.walFile);
+    cfg.logFile    = resolve(cfg.logFile);
+    std::string stopwordsPath = resolve("../data/stopwords.txt");
 
     Logger::instance().init(cfg.logFile, LINFO);
     Logger::instance().log(LINFO, "Search Engine Starting");
@@ -66,7 +90,7 @@ int main(int argc, char **argv) {
     // Build tokenizer
     //----------------------------------------------------------------------
     Tokenizer *tokenizer = new Tokenizer();
-    tokenizer->loadStopwords("data/stopwords.txt");
+    tokenizer->loadStopwords(stopwordsPath);
     tokenizer->useStopwords = cfg.useStopwords;
     tokenizer->useStemming  = cfg.useStemming;
 
@@ -167,11 +191,14 @@ int main(int argc, char **argv) {
         }
 
         if (line == ":reindex") {
-            Logger::instance().log(LINFO, "Manual reindex triggered.");
-            indexer.buildFromFolderParallel(cfg.docsFolder, true);
+            Logger::instance().log(LINFO, "Manual sync triggered.");
+            auto sr = indexer.syncFolder(cfg.docsFolder, true);
             cache.clear();
             lastResults.clear();
-            cout << "Reindex complete. Docs=" << indexer.numDocs() << "\n";
+            cout << "Sync complete. Docs=" << indexer.numDocs()
+                 << " added=" << sr.added
+                 << " removed=" << sr.removed
+                 << " modified=" << sr.modified << "\n";
             continue;
         }
 
@@ -227,7 +254,7 @@ int main(int argc, char **argv) {
                      << " size=" << d.size_bytes << "B"
                      << " mtime=" << d.mtime << "] "
                      << d.path << "\n"
-                     << "   " << indexer.makeSnippet(r.id, lastQTokens, 80) << "\n";
+                     << "   " << indexer.makeSnippet(r.id, lastQTokens, 300) << "\n";
             }
             continue;
         }
@@ -354,7 +381,7 @@ int main(int argc, char **argv) {
                  << " size=" << d.size_bytes << "B"
                  << " mtime=" << d.mtime << "] "
                  << d.path << "\n"
-                 << "   " << indexer.makeSnippet(r.id, qtokens, 80) << "\n";
+                 << "   " << indexer.makeSnippet(r.id, qtokens, 300) << "\n";
         }
     }
 

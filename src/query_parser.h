@@ -9,7 +9,7 @@
 
 struct QNode {
     enum Type { TERM, PHRASE, AND, OR, NOT } type;
-    std::string term; // normalized term or phrase
+    std::string term;
     std::shared_ptr<QNode> left, right;
 
     QNode(Type t = TERM, const std::string &v = "") : type(t), term(v) {}
@@ -24,16 +24,24 @@ class QueryParser {
 public:
     QueryParser(const Tokenizer *tokenizer);
 
-    // parse query into AST
     std::shared_ptr<QNode> parse(const std::string &query) const;
 
-    // Evaluate AST sequentially
-    std::unordered_set<int> evaluate(std::shared_ptr<QNode> node, const Indexer &idx) const;
+    // Returns sorted vector<int> of matching docIDs — O(n) merge operations
+    std::vector<int> evaluate(std::shared_ptr<QNode> node, const Indexer &idx) const;
 
-    // Evaluate AST in parallel (AND intersection parallelized)
-    std::unordered_set<int> evaluateParallel(std::shared_ptr<QNode> node, const Indexer &idx, int maxThreads) const;
+    // Parallel AND: evaluates children concurrently then intersects
+    std::vector<int> evaluateParallel(std::shared_ptr<QNode> node, const Indexer &idx, int maxThreads) const;
+
+    // Legacy adapter: returns unordered_set for callers that need it
+    std::unordered_set<int> evaluateSet(std::shared_ptr<QNode> node, const Indexer &idx) const;
+    std::unordered_set<int> evaluateParallelSet(std::shared_ptr<QNode> node, const Indexer &idx, int maxThreads) const;
 
 private:
     const Tokenizer *tokenizer;
     std::vector<std::string> tokenizeForParser(const std::string &q) const;
+
+    // Sorted list merge primitives
+    static std::vector<int> listAnd(const std::vector<int> &a, const std::vector<int> &b);
+    static std::vector<int> listOr (const std::vector<int> &a, const std::vector<int> &b);
+    static std::vector<int> listNot(const std::vector<int> &a, int totalDocs);
 };

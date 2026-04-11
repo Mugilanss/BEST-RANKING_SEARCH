@@ -2,23 +2,29 @@ import { useState } from "react";
 import { API_BASE } from "../api";
 import "./AdminPage.css";
 
-function ActionCard({ title, description, buttonLabel, onAction, danger }) {
+function ActionCard({ title, description, buttonLabel, onAction, danger, icon }) {
   const [status, setStatus]   = useState("");
   const [loading, setLoading] = useState(false);
 
   async function handle() {
     setLoading(true); setStatus("");
-    try { const res = await onAction(); setStatus(`✓ ${JSON.stringify(res)}`); }
-    catch (e) { setStatus(`✗ ${e.message}`); }
+    try { 
+      const res = await onAction(); 
+      setStatus(`✓ Success: ${JSON.stringify(res)}`); 
+    }
+    catch (e) { setStatus(`✗ Error: ${e.message}`); }
     finally { setLoading(false); }
   }
 
   return (
     <div className={`admin-card ${danger ? "danger" : ""}`}>
-      <div className="admin-card-title">{title}</div>
+      <div className="admin-card-title">
+        <span>{icon}</span> {title}
+      </div>
       <div className="admin-card-desc">{description}</div>
       <button className={`admin-btn ${danger ? "danger" : ""}`} onClick={handle} disabled={loading}>
-        {loading ? "Working…" : buttonLabel}
+        {loading ? <span className="searchbar-spinner" /> : null}
+        {loading ? "Processing..." : buttonLabel}
       </button>
       {status && <div className={`admin-status ${status.startsWith("✓") ? "ok" : "err"}`}>{status}</div>}
     </div>
@@ -34,7 +40,7 @@ function CrawlCard() {
   const token = localStorage.getItem("adminToken") || "admin";
 
   async function handle() {
-    if (!url.trim()) { setStatus("✗ Enter a URL"); return; }
+    if (!url.trim()) { setStatus("✗ Error: Enter valid URL"); return; }
     setLoading(true); setStatus("");
     try {
       const res = await fetch(
@@ -43,21 +49,35 @@ function CrawlCard() {
       );
       const d = await res.json();
       if (!res.ok) throw new Error(d.error || res.status);
-      setStatus(`✓ ${d.status} — up to ${d.max_pages} pages from ${d.seed}`);
-    } catch(e) { setStatus(`✗ ${e.message}`); }
+      setStatus(`✓ Started: up to ${d.max_pages} pages from ${d.seed}`);
+    } catch(e) { setStatus(`✗ Error: ${e.message}`); }
     finally { setLoading(false); }
   }
 
   return (
     <div className="admin-card">
-      <div className="admin-card-title">Crawl a Website</div>
-      <div className="admin-card-desc">Fetches pages, respects robots.txt, saves to docs/crawled/ and indexes incrementally.</div>
-      <div className="crawl-inputs">
-        <input className="crawl-input" placeholder="https://example.com" value={url} onChange={e=>setUrl(e.target.value)} />
-        <label>Depth <input type="number" min={1} max={5} value={depth} onChange={e=>setDepth(+e.target.value)} className="crawl-num" /></label>
-        <label>Pages <input type="number" min={1} max={100} value={pages} onChange={e=>setPages(+e.target.value)} className="crawl-num" /></label>
+      <div className="admin-card-title"><span>🕸️</span> Web Crawler</div>
+      <div className="admin-card-desc">Expand index by crawling remote sites. Files are saved to docs/crawled and indexed incrementally.</div>
+      <div className="crawl-form">
+        <div className="crawl-inputs">
+          <div className="crawl-field">
+            <label>Target URL</label>
+            <input className="crawl-input" placeholder="https://example.com" value={url} onChange={e=>setUrl(e.target.value)} />
+          </div>
+          <div className="crawl-field">
+            <label>Depth</label>
+            <input type="number" min={1} max={5} value={depth} onChange={e=>setDepth(+e.target.value)} className="crawl-num" />
+          </div>
+          <div className="crawl-field">
+            <label>Limit (Pages)</label>
+            <input type="number" min={1} max={100} value={pages} onChange={e=>setPages(+e.target.value)} className="crawl-num" />
+          </div>
+        </div>
+        <button className="admin-btn" onClick={handle} disabled={loading}>
+          {loading ? <span className="searchbar-spinner" /> : "🚀"}
+          {loading ? "Starting..." : "Begin Crawl"}
+        </button>
       </div>
-      <button className="admin-btn" onClick={handle} disabled={loading}>{loading ? "Starting…" : "Start Crawl"}</button>
       {status && <div className={`admin-status ${status.startsWith("✓") ? "ok" : "err"}`}>{status}</div>}
     </div>
   );
@@ -76,17 +96,24 @@ function PopularQueries() {
     } catch(e) { setLoaded(true); }
   }
 
-  if (!loaded) return <button className="admin-btn" onClick={load}>Load Popular Queries</button>;
-  if (queries.length === 0) return <p style={{color:"#64748b"}}>No queries logged yet.</p>;
+  if (!loaded) return <button className="admin-btn" onClick={load}>📊 Load Popular Queries</button>;
+  if (queries.length === 0) return <p style={{color:"var(--text-muted)", fontSize:"0.9rem"}}>No query logs found.</p>;
+  
   return (
-    <table className="admin-table">
-      <thead><tr><th>#</th><th>Query</th><th>Count</th></tr></thead>
-      <tbody>
-        {queries.map((q,i) => (
-          <tr key={q.query}><td>{i+1}</td><td><code>{q.query}</code></td><td>{q.count}</td></tr>
-        ))}
-      </tbody>
-    </table>
+    <div className="admin-table-wrap">
+      <table className="admin-table">
+        <thead><tr><th>Rank</th><th>Search Query</th><th>Frequency</th></tr></thead>
+        <tbody>
+          {queries.map((q,i) => (
+            <tr key={q.query}>
+              <td style={{fontWeight:600, color:"var(--text-muted)"}}>#{i+1}</td>
+              <td><code>{q.query}</code></td>
+              <td style={{color:"var(--accent-primary)", fontWeight:600}}>{q.count} times</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
@@ -105,78 +132,89 @@ export default function AdminPage() {
 
   return (
     <div className="admin-page">
-      <h2 className="admin-title">Admin Panel</h2>
+      <h2 className="admin-title">Control Deck</h2>
 
       <div className="admin-grid">
         <ActionCard
-          title="Rebuild Index"
-          description="Drops the current index and rebuilds it from scratch by scanning the docs folder. This may take a while for large corpora."
-          buttonLabel="Trigger Full Rebuild"
+          icon="⚡"
+          title="Full Index Rebuild"
+          description="Drops the existing index and parses all documents in the corpus. Use this after configuration changes or massive file updates."
+          buttonLabel="Trigger Cold Rebuild"
           onAction={() => postAction("/index/rebuild")}
           danger
         />
         <ActionCard
-          title="Incremental Update"
-          description="Scans the docs folder for new files not yet in the index and adds them without a full rebuild. Fast for small additions."
-          buttonLabel="Run Incremental Update"
+          icon="🔄"
+          title="Incremental Sync"
+          description="Fast scan of the documents folder. Checks for modified or new files since the last indexing session."
+          buttonLabel="Run Hot Update"
           onAction={() => postAction("/index/update")}
         />
-      </div>
-
-      <div className="admin-section">
-        <h3>Quick Stats</h3>
+        <CrawlCard />
         <ActionCard
-          title="Fetch Stats"
-          description="Fetch current engine stats from /stats endpoint."
-          buttonLabel="Fetch Stats"
+          icon="📊"
+          title="Engine Observability"
+          description="Retrieve low-level metrics including document counts, average token length, and scoring metadata."
+          buttonLabel="Fetch Live Stats"
           onAction={async () => {
             const res = await fetch(`${API_BASE}/stats`);
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const d = await res.json();
-            setLogs(JSON.stringify({ docs: d.docs, index_kb: d.index_kb, avg_doc_len: d.avg_doc_len, scoring: d.scoring }, null, 2));
-            return { docs: d.docs, index_kb: d.index_kb };
+            setLogs(JSON.stringify({ 
+              status: "online",
+              docs: d.docs, 
+              index_kb: d.index_kb, 
+              avg_doc_len: d.avg_doc_len, 
+              scoring: d.scoring 
+            }, null, 2));
+            return { docs: d.docs, size: d.index_kb };
           }}
         />
-        {logs && (
-          <pre className="admin-logs">{logs}</pre>
-        )}
       </div>
 
-      <div className="admin-section">
-        <h3>Web Crawler (6.4)</h3>
-        <div className="crawl-form">
-          <CrawlCard ctx={API_BASE} />
+      {logs && (
+        <div className="admin-section">
+          <div className="admin-section-header">
+            <h3>Metrics Explorer</h3>
+          </div>
+          <pre className="admin-logs-pre">{logs}</pre>
         </div>
-      </div>
+      )}
 
       <div className="admin-section">
-        <h3>Popular Queries (6.3)</h3>
+        <div className="admin-section-header">
+          <h3>Top Query Intent</h3>
+        </div>
         <PopularQueries />
       </div>
 
       <div className="admin-section">
-        <h3>API Reference</h3>
-        <table className="admin-table">
-          <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
-          <tbody>
-            {[
-              ["GET",  "/search?q=&k=&sort=",     "Full-text search"],
-              ["GET",  "/document/<id>",           "Fetch document by ID"],
-              ["GET",  "/stats",                   "Engine metrics & top terms"],
-              ["GET",  "/autocomplete?q=&k=",      "Prefix autocomplete + query suggestions"],
-              ["GET",  "/popular?k=",              "Top queries from query log"],
-              ["POST", "/index/rebuild",           "Full index rebuild (auth required)"],
-              ["POST", "/index/update",            "Incremental WAL update (auth required)"],
-              ["POST", "/crawl?url=&depth=&pages=","Web crawler (auth required)"],
-            ].map(([m, p, d]) => (
-              <tr key={p}>
-                <td><span className={`method-badge ${m.toLowerCase()}`}>{m}</span></td>
-                <td><code>{p}</code></td>
-                <td>{d}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="admin-section-header">
+          <h3>System Endpoints</h3>
+        </div>
+        <div className="admin-table-wrap">
+          <table className="admin-table">
+            <thead><tr><th>Verb</th><th>Route</th><th>Operation</th></tr></thead>
+            <tbody>
+              {[
+                ["GET",  "/search",     "Execute full-text query"],
+                ["GET",  "/document",   "Retrieve raw source by ID"],
+                ["GET",  "/stats",      "System metrics and term frequency"],
+                ["GET",  "/autocomplete","Prefix-based term discovery"],
+                ["GET",  "/popular",    "Historical query throughput"],
+                ["POST", "/index/rebuild", "Purge and reconstruct index"],
+                ["POST", "/index/update",  "WAL-style incremental delta"],
+                ["POST", "/crawl",         "Remote resource ingestion"],
+              ].map(([m, p, d]) => (
+                <tr key={p}>
+                  <td><span className={`method-badge ${m.toLowerCase()}`}>{m}</span></td>
+                  <td><code>{p}</code></td>
+                  <td>{d}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
