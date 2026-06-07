@@ -517,7 +517,6 @@ void register_routes(httplib::Server &srv, EngineContext &ctx)
     // ------------------------------------------------------------------
     srv.Get("/health", [&ctx](const httplib::Request &req, httplib::Response &res) {
         addCORS(res);
-        if (!checkRate(req, res, ctx)) return;
         
         ostringstream js;
         js << "{"
