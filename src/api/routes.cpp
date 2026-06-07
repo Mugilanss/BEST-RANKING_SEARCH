@@ -135,25 +135,7 @@ static string sanitizeInput(const string &s, size_t maxLen = 512)
 // -----------------------------------------------------------------------
 static bool isValidInput(const string &s, size_t maxLen = 512)
 {
-    if (s.size() > maxLen) return false;
-    
-    // Check for SQL injection patterns
-    string lower = s;
-    for (auto &c : lower) c = tolower((unsigned char)c);
-    
-    if (lower.find("union") != string::npos ||
-        lower.find("select") != string::npos ||
-        lower.find("delete") != string::npos ||
-        lower.find("insert") != string::npos ||
-        lower.find("drop") != string::npos ||
-        lower.find("update") != string::npos ||
-        lower.find("--") != string::npos ||
-        lower.find("/*") != string::npos ||
-        lower.find("*/") != string::npos)
-    {
-        return false;
-    }
-    return true;
+    return s.size() <= maxLen;
 }
 
 // -----------------------------------------------------------------------
@@ -527,7 +509,7 @@ void register_routes(httplib::Server &srv, EngineContext &ctx)
         if (!checkAuth(req, res, ctx)) return;
         
         res.set_header("Content-Type", "text/plain; charset=utf-8");
-        res.set_content(ctx.metrics.reportPrometheus());
+        res.set_content(ctx.metrics.reportPrometheus(), "text/plain; charset=utf-8");
     });
 
     // ------------------------------------------------------------------

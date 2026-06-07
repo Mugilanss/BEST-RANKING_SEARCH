@@ -277,81 +277,12 @@ void Indexer::buildFromFolderParallel(const string &folder, bool recursive) {
 
 // ---------------------- Persistence ----------------------
 // Helper: serialize index data to memory buffer
-static void serializeIndexData(stringstream &ss, const Indexer::Data &data) {
-    using namespace std;
-    
-    int shards = data.shardCount;
-    ss.write((char*)&shards, sizeof(shards));
-    int N = (int)data.docs.size();
-    ss.write((char*)&N, sizeof(N));
 
-    for (const auto &d : data.docs) {
-        uint64_t plen = (uint64_t)d.path.size();
-        ss.write((char*)&plen, sizeof(plen));
-        ss.write(d.path.data(), plen);
-        ss.write((char*)&d.size_bytes, sizeof(d.size_bytes));
-        ss.write((char*)&d.mtime, sizeof(d.mtime));
-    }
-
-    // persist token counts so avgDocLen is correct on load
-    for (int i = 0; i < N; ++i) {
-        int tc = data.docTokenCount[i];
-        ss.write((char*)&tc, sizeof(tc));
-    }
-
-    uint64_t vocabCount = data.df.size();
-    ss.write((char*)&vocabCount, sizeof(vocabCount));
-    for (auto &p : data.df) {
-        const string &term = p.first;
-        uint64_t tlen = (uint64_t)term.size();
-        ss.write((char*)&tlen, sizeof(tlen));
-        ss.write(term.data(), tlen);
-        ss.write((char*)&p.second, sizeof(p.second));
-    }
-
-    for (int sh = 0; sh < data.shardCount; ++sh) {
-        lock_guard<mutex> lk(*data.shardMutexes[sh]);
-        uint64_t termsCount = data.postingsSharded[sh].size();
-        ss.write((char*)&termsCount, sizeof(termsCount));
-        for (auto &entry : data.postingsSharded[sh]) {
-            const string &term = *entry.first;
-            uint64_t tlen = (uint64_t)term.size();
-            ss.write((char*)&tlen, sizeof(tlen));
-            ss.write(term.data(), tlen);
-            uint64_t plistSize = (uint64_t)entry.second.size();
-            ss.write((char*)&plistSize, sizeof(plistSize));
-            int prevDoc = 0;
-            for (auto &post : entry.second) {
-                uint64_t gap = (uint64_t)(post.docID - prevDoc);
-                varint::write_u64(ss, gap);
-                prevDoc = post.docID;
-                uint64_t posCount = (uint64_t)post.positions.size();
-                varint::write_u64(ss, posCount);
-                int prevPos = 0;
-                for (int pos : post.positions) {
-                    uint64_t posGap = (uint64_t)(pos - prevPos);
-                    varint::write_u64(ss, posGap);
-                    prevPos = pos;
-                }
-            }
-        }
-    }
-}
 
 bool Indexer::saveIndex(const string &filename) const {
     try {
         // Serialize to memory first
         stringstream ss(ios::binary);
-        
-        // Build temporary Data structure for serialization
-        struct {
-            int shardCount;
-            const vector<Document> &docs;
-            const vector<int> &docTokenCount;
-            const unordered_map<string, int> &df;
-            const vector<unique_ptr<mutex>> &shardMutexes;
-            const vector<unordered_map<const string*, vector<Posting>>> &postingsSharded;
-        } data{shardCount, docs, docTokenCount, df, shardMutexes, postingsSharded};
         
         // Serialize to memory buffer
         stringstream memBuf(ios::binary);
@@ -445,7 +376,7 @@ bool Indexer::saveIndex(const string &filename) const {
         Logger::instance().log(LINFO, 
             "saveIndex: orig=" + to_string(originalSize) + 
             "B, compressed=" + to_string(compressedSize) + 
-            "B (ratio=" + to_string(100.0 * compressedSize / originalSize, 1) + "%)");
+            "B (ratio=" + to_string(100.0 * compressedSize / originalSize) + "%)");
         
         return true;
     } catch (const exception &e) {
@@ -501,7 +432,7 @@ bool Indexer::loadIndex(const string &filename) {
         Logger::instance().log(LINFO, 
             "loadIndex: decompressed " + to_string(compressedSize) + 
             "B -> " + to_string(originalSize) + 
-            "B (ratio=" + to_string(100.0 * compressedSize / originalSize, 1) + "%)");
+            "B (ratio=" + to_string(100.0 * compressedSize / originalSize) + "%)");
 
         // Parse uncompressed data from memory
         stringstream ss(ios::binary);

@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <set>
 #include <unordered_map>
 #include <unordered_set>
 #include <memory>
@@ -36,7 +37,7 @@ class StringInterner {
 public:
     const std::string* intern(const std::string &s);
 private:
-    std::unordered_set<std::string> table;
+    std::set<std::string> table;
 };
 
 class Indexer {
