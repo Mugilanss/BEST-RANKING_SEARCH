@@ -1,0 +1,23 @@
+# Build
+build/
+out/
+
+# Binaries
+*.exe
+*.o
+*.obj
+
+# Index & logs
+index.bin
+*.log
+query.log
+wal.log
+
+# UI
+ui/node_modules/
+ui/dist/
+
+# IDE
+.vscode/
+.idea/
+*.user

@@ -1,4 +1,0 @@
-C:/cppsearch/build/CMakeFiles/search_engine.dir
-C:/cppsearch/build/CMakeFiles/search_server.dir
-C:/cppsearch/build/CMakeFiles/edit_cache.dir
-C:/cppsearch/build/CMakeFiles/rebuild_cache.dir
