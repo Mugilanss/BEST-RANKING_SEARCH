@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <memory>
 #include <mutex>
 #include <atomic>
@@ -108,12 +109,22 @@ struct EngineContext {
         if (cfg.useWAL)
             wal.open(cfg.walFile);
 
+        // if (!cfg.indexFile.empty() && indexer.loadIndex(cfg.indexFile)) {
+        //     Logger::instance().log(LINFO, "Server: loaded index " + cfg.indexFile);
+        // } else {
+        //     indexer.buildFromFolderParallel(cfg.docsFolder, true);
+        //     if (!cfg.indexFile.empty())
+        //         indexer.saveIndex(cfg.indexFile);
+        // }
+
         if (!cfg.indexFile.empty() && indexer.loadIndex(cfg.indexFile)) {
-            Logger::instance().log(LINFO, "Server: loaded index " + cfg.indexFile);
+            std::cout << "DEBUG: loaded index, docs=" << indexer.numDocs() << "\n";
         } else {
-            indexer.buildFromFolderParallel(cfg.docsFolder, true);
-            if (!cfg.indexFile.empty())
-                indexer.saveIndex(cfg.indexFile);
+        std::cout << "DEBUG: building from folder: " << cfg.docsFolder << "\n";
+        indexer.buildFromFolderParallel(cfg.docsFolder, true);
+        std::cout << "DEBUG: after build, docs=" << indexer.numDocs() << "\n";
+        if (!cfg.indexFile.empty())
+            indexer.saveIndex(cfg.indexFile);
         }
 
         indexer.preloadHotDocs(50);
