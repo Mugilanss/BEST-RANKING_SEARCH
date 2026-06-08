@@ -9,7 +9,7 @@
 
 #include <iostream>
 #include <string>
-
+#include <filesystem>
 void APIServer::run(const std::string &configPath,
                    const std::string &host,
                    int port)
@@ -21,6 +21,11 @@ void APIServer::run(const std::string &configPath,
     std::cout << "DEBUG: docsFolder=" << ctx.cfg.docsFolder << std::endl;
     std::cout << "DEBUG: numDocs=" << ctx.indexer.numDocs() << std::endl;
     std::cout << "DEBUG: extFilter=" << ctx.cfg.extFilter << std::endl;
+
+    namespace fs = std::filesystem;
+    for (auto &p : fs::directory_iterator(ctx.cfg.docsFolder)) {
+        std::cout << "DEBUG file: " << p.path() << " ext=" << p.path().extension() << std::endl;
+    }
 
     httplib::Server srv;
 
