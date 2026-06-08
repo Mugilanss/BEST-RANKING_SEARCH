@@ -1,0 +1,16 @@
+Preprocessing Pipeline
+Raw text → Tokenization → Stopword Removal → Stemming/Lemmatization → Normalized tokens. All implemented in C++ using custom string processing or integrated libraries like Porter Stemmer.
+Feature Extraction
+Each document is represented as a feature vector:
+TF-IDF weights per term
+Document length normalization
+Position of query term (title vs body)
+Metadata signals (date, source weight)
+Scoring & Retrieval
+Query hits the inverted index → candidate documents retrieved → ML scoring function ranks them → top-K results returned. The scoring function can be a dot product, cosine similarity, or BM25 (a stronger TF-IDF variant).
+BM25 (Bonus — industry standard)
+An upgraded TF-IDF used by Elasticsearch and Lucene. Accounts for document length and term saturation. Strongly recommended to mention this as your primary ranking algorithm.
+Evaluation Metrics
+Precision@K — of top K results, how many are relevant
+Recall — how many relevant docs were actually retrieved
+Mean Average Precision (MAP) — overall ranking quality score

@@ -1,0 +1,10 @@
+TF-IDF (Term Frequency-Inverse Document Frequency)
+The backbone of most search engines. Ranks documents by how relevant a term is — not just how often it appears, but how unique it is across the corpus. Implemented as a weighted scoring matrix in C++.
+Cosine Similarity
+Measures relevance between a query vector and document vectors. Converts text into numerical vectors and computes the angle between them. Higher similarity = better match.
+Inverted Index
+Not purely ML, but the data structure that makes ML ranking feasible at scale. Maps terms to document lists — enables O(1) lookups instead of scanning every document.
+Query Expansion (NLP-based)
+Uses synonym mapping or word embeddings to expand the user's query. Example: searching "fast" also retrieves results for "quick", "rapid". Improves recall significantly.
+Ranking Model (Learning to Rank)
+Combines multiple signals — TF-IDF score, document freshness, term position, click-through rate — into a final relevance score using a weighted linear model or a simple ML classifier.
