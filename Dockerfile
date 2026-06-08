@@ -16,6 +16,8 @@ RUN mkdir -p build && cd build && cmake .. && make search_server
 
 EXPOSE 10000
 
-CMD sh -c "echo '=== /app/docs ===' && ls /app/docs && ./build/bin/search_server 10000 0.0.0.0 /app/src/config.ini"
+CMD sh -c "echo '=== /app/docs ===' && ls /app/docs && echo '=== starting server ===' && ./build/bin/search_server 10000 0.0.0.0 /app/src/config.ini 2>&1"
+
+#CMD sh -c "echo '=== /app/docs ===' && ls /app/docs && ./build/bin/search_server 10000 0.0.0.0 /app/src/config.ini"
 
 #CMD ["./build/bin/search_server", "10000", "0.0.0.0", "src/config.ini"]
