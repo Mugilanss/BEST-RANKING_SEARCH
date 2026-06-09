@@ -91,6 +91,14 @@ string Indexer::loadFileContent(const string &path) const {
         string cmd = "pdftotext \"" + path + "\" -";
         return execCommandCapture(cmd);
     }
+     if (endsWith(lower, ".doc")) {
+        string cmd = "antiword \"" + path + "\"";
+        return execCommandCapture(cmd);
+    }
+    if (endsWith(lower, ".docx")) {
+        string cmd = "docx2txt \"" + path + "\" -";
+        return execCommandCapture(cmd);
+    }
     return readTextFile(path);
 }
 
@@ -189,7 +197,7 @@ void Indexer::buildFromFolderParallel(const string &folder, bool recursive) {
             if (!fs::is_regular_file(p.path())) continue;
             string ext = p.path().extension().string();
             if (!extFilter.empty() && ext != extFilter) continue;
-            if (ext == ".txt" || ext == ".md" || ext == ".markdown" || ext == ".pdf")
+            if (ext == ".txt" || ext == ".md" || ext == ".markdown" || ext == ".pdf" || ext == ".doc" || ext == ".docx")
                 files.push_back(p.path().string());
         }
     } else {

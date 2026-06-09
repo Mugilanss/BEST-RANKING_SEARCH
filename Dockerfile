@@ -6,6 +6,9 @@ RUN apt-get update && apt-get install -y \
     cmake \
     g++ \
     make \
+    poppler-utils \
+    antiword \
+    docx2txt \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -17,5 +20,3 @@ RUN mkdir -p build && cd build && cmake .. && make search_server
 EXPOSE 10000
 
 CMD sh -c "rm -f /app/index.bin && echo '=== /app/docs ===' && ls /app/docs && echo '=== starting server ===' && ./build/bin/search_server 10000 0.0.0.0 /app/src/config.ini 2>&1"
-
-CMD sh -c "echo '=== /app/docs ===' && ls /app/docs && echo '=== starting server ===' && ./build/bin/search_server 10000 0.0.0.0 /app/src/config.ini 2>&1"
