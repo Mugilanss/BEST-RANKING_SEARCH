@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y \
     poppler-utils \
     antiword \
     docx2txt \
+    libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app

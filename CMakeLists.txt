@@ -99,3 +99,6 @@ endif()
 set_target_properties(search_engine search_server PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )
+
+find_package(PostgreSQL REQUIRED)
+target_link_libraries(search_server PostgreSQL::PostgreSQL)
