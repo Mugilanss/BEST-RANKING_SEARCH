@@ -17,10 +17,10 @@ void APIServer::run(const std::string &configPath,
     EngineContext ctx;
     ctx.init(configPath);
 
-    // DEBUG: print indexing result
-    std::cout << "DEBUG: docsFolder=" << ctx.cfg.docsFolder << std::endl;
-    std::cout << "DEBUG: numDocs=" << ctx.indexer.numDocs() << std::endl;
-    std::cout << "DEBUG: extFilter=" << ctx.cfg.extFilter << std::endl;
+    // // DEBUG: print indexing result
+    // std::cout << "DEBUG: docsFolder=" << ctx.cfg.docsFolder << std::endl;
+    // std::cout << "DEBUG: numDocs=" << ctx.indexer.numDocs() << std::endl;
+    // std::cout << "DEBUG: extFilter=" << ctx.cfg.extFilter << std::endl;
 
     namespace fs = std::filesystem;
     for (auto &p : fs::directory_iterator(ctx.cfg.docsFolder)) {

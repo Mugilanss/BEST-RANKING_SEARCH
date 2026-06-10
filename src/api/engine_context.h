@@ -115,9 +115,9 @@ struct EngineContext {
             auto dbDocs = db.loadAllDocuments();
             indexer.buildFromDocuments(dbDocs);
         } else {
-            std::cout << "DEBUG: building from folder\n";
+            //std::cout << "DEBUG: building from folder\n";
             indexer.buildFromFolderParallel(cfg.docsFolder, true);
-            std::cout << "DEBUG: after build, docs=" << indexer.numDocs() << "\n";
+            //std::cout << "DEBUG: after build, docs=" << indexer.numDocs() << "\n";
             if (useDB) {
                 for (int i = 0; i < indexer.numDocs(); ++i) {
                     const Document &d = indexer.getDoc(i);
