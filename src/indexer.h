@@ -25,7 +25,7 @@ struct Document {
     uint64_t size_bytes = 0;
     time_t mtime = 0;
     double norm = 0.0;
-    // content is NOT stored in memory — loaded on demand via loadContent()
+    std::string content;
 };
 
 struct ScoredDoc {
@@ -49,6 +49,7 @@ public:
     void buildFromFolder(const std::string &folder, bool recursive = true);
     void buildFromFolderParallel(const std::string &folder, bool recursive = true);
     void buildFromFileList(const std::vector<std::string> &files);  // for ShardRouter
+    void buildFromDocuments(const std::vector<Document> &dbDocs);
     void incrementalUpdateWithWAL(const std::string &folder, WAL &wal, bool recursive = true);
 
     // Sync: detects added, deleted, and modified files — no WAL needed

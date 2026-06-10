@@ -188,6 +188,63 @@ void Indexer::buildFromFileList(const vector<string> &files) {
     Logger::instance().log(LINFO, "buildFromFileList: indexed " + to_string(N) + " docs");
 }
 
+void Indexer::buildFromDocuments(const vector<Document> &dbDocs) {
+    size_t Nfiles = dbDocs.size();
+    docs.clear(); docs.resize(Nfiles);
+    docTf.clear(); docTf.resize(Nfiles);
+    docTokenCount.assign(Nfiles, 0);
+    df.clear(); vocabMap.clear(); idf.clear();
+    for (int sh = 0; sh < shardCount; ++sh) postingsSharded[sh].clear();
+
+    for (size_t i = 0; i < Nfiles; ++i) {
+        docs[i] = dbDocs[i];
+        unordered_map<const string*, vector<int>> local;
+        
+        vector<string> tokens;
+        if (tokenizer) tokens = tokenizer->tokenize(dbDocs[i].content);
+        if (tokenizer && useStemming)
+            for (auto &t : tokens) t = tokenizer->stem(t);
+
+        docTokenCount[i] = (int)tokens.size();
+        for (int j = 0; j < (int)tokens.size(); ++j) {
+            const string *pin = interner.intern(tokens[j]);
+            local[pin].push_back(j);
+        }
+
+        unordered_set<const string*> seen;
+        for (auto &entry : local) {
+            const string *tp = entry.first;
+            double tf = 1.0 + log((double)entry.second.size());
+            docTf[i][tp] = tf;
+            vocabMap[*tp] = tp;
+            size_t sh = shardFor(tp, shardCount);
+            postingsSharded[sh][tp].push_back({(int)i, entry.second});
+            seen.insert(tp);
+        }
+        for (auto tp : seen) df[*tp] += 1;
+    }
+
+    int N = (int)docs.size();
+    idf.clear();
+    for (auto &p : df) idf[p.first] = log((double)(N+1)/(p.second+1)) + 1.0;
+
+    for (int i = 0; i < N; ++i) {
+        double sum = 0.0;
+        for (auto &pr : docTf[i]) {
+            auto it = idf.find(*pr.first);
+            double iv = (it == idf.end()) ? 0.0 : it->second;
+            sum += pr.second * iv * pr.second * iv;
+        }
+        docs[i].norm = sqrt(sum);
+    }
+
+    double tot = 0;
+    for (int c : docTokenCount) tot += c;
+    avgDocLenCache = docTokenCount.empty() ? 0.0 : tot / docTokenCount.size();
+    buildVocabStructures();
+    Logger::instance().log(LINFO, "buildFromDocuments: indexed " + to_string(N) + " docs from DB");
+}
+
 void Indexer::buildFromFolderParallel(const string &folder, bool recursive) {
     Logger::instance().log(LINFO, "Starting parallel indexing on: " + folder);
 

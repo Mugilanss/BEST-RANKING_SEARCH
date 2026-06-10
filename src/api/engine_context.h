@@ -20,15 +20,14 @@
 #include "logger.h"
 #include "query_log.h"
 #include "crawler.h"
+#include "db.h"
 
-// Resolve a path relative to a base directory, then normalize it
 static inline std::string resolvePath(const std::string &base, const std::string &p) {
     std::filesystem::path fp(p);
     std::filesystem::path resolved = fp.is_absolute() ? fp : (std::filesystem::path(base) / fp);
     return std::filesystem::weakly_canonical(resolved).string();
 }
 
-// Rate limiter: max N requests per window per IP
 struct RateLimiter {
     int maxRequests;
     int windowSeconds;
@@ -59,11 +58,11 @@ struct RateLimiter {
     }
 };
 
-// All engine objects in one place
 struct EngineContext {
     Config          cfg;
     Tokenizer       tokenizer;
     Indexer         indexer;
+    Database        db;
     WAL             wal;
     Metrics         metrics;
     RateLimiter     rateLimiter{60, 60};
@@ -73,9 +72,7 @@ struct EngineContext {
     std::unique_ptr<LRUCache<std::string, std::vector<ScoredDoc>>> cache;
     std::unique_ptr<QueryLog>    queryLog;
 
-    // Admin token for protected endpoints (set via config or env)
     std::string adminToken;
-
     mutable std::mutex engineMu;
 
     void init(const std::string &configPath) {
@@ -89,8 +86,8 @@ struct EngineContext {
         cfg.walFile    = resolvePath(baseDir, cfg.walFile);
         cfg.logFile    = resolvePath(baseDir, cfg.logFile);
 
-        std::string stopwordsPath  = resolvePath(baseDir, "../data/stopwords.txt");
-        std::string queryLogPath   = resolvePath(baseDir, "../query.log");
+        std::string stopwordsPath = resolvePath(baseDir, "../data/stopwords.txt");
+        std::string queryLogPath  = resolvePath(baseDir, "../query.log");
 
         Logger::instance().init(cfg.logFile, LINFO, false);
 
@@ -109,22 +106,28 @@ struct EngineContext {
         if (cfg.useWAL)
             wal.open(cfg.walFile);
 
-        // if (!cfg.indexFile.empty() && indexer.loadIndex(cfg.indexFile)) {
-        //     Logger::instance().log(LINFO, "Server: loaded index " + cfg.indexFile);
-        // } else {
-        //     indexer.buildFromFolderParallel(cfg.docsFolder, true);
-        //     if (!cfg.indexFile.empty())
-        //         indexer.saveIndex(cfg.indexFile);
-        // }
+        // Try DB first
+        const char *dbUrl = std::getenv("DATABASE_URL");
+        bool useDB = dbUrl && db.connect(dbUrl);
 
-        if (!cfg.indexFile.empty() && indexer.loadIndex(cfg.indexFile)) {
-            std::cout << "DEBUG: loaded index, docs=" << indexer.numDocs() << "\n";
+        if (useDB && db.documentCount() > 0) {
+            std::cout << "DEBUG: loading from DB, docs=" << db.documentCount() << "\n";
+            auto dbDocs = db.loadAllDocuments();
+            indexer.buildFromDocuments(dbDocs);
         } else {
-        std::cout << "DEBUG: building from folder: " << cfg.docsFolder << "\n";
-        indexer.buildFromFolderParallel(cfg.docsFolder, true);
-        std::cout << "DEBUG: after build, docs=" << indexer.numDocs() << "\n";
-        if (!cfg.indexFile.empty())
-            indexer.saveIndex(cfg.indexFile);
+            std::cout << "DEBUG: building from folder\n";
+            indexer.buildFromFolderParallel(cfg.docsFolder, true);
+            std::cout << "DEBUG: after build, docs=" << indexer.numDocs() << "\n";
+            if (useDB) {
+                for (int i = 0; i < indexer.numDocs(); ++i) {
+                    const Document &d = indexer.getDoc(i);
+                    std::string content = indexer.loadContent(i);
+                    db.saveDocument(d.path, content, d.size_bytes, d.mtime);
+                }
+                std::cout << "DEBUG: saved " << indexer.numDocs() << " docs to DB\n";
+            }
+            if (!cfg.indexFile.empty())
+                indexer.saveIndex(cfg.indexFile);
         }
 
         indexer.preloadHotDocs(50);
@@ -134,13 +137,10 @@ struct EngineContext {
         cache    = std::make_unique<LRUCache<std::string, std::vector<ScoredDoc>>>(1000);
         queryLog = std::make_unique<QueryLog>(queryLogPath);
 
-        // Admin token: read from env SEARCH_ADMIN_TOKEN, fallback to "admin"
         const char *envTok = std::getenv("SEARCH_ADMIN_TOKEN");
         adminToken = envTok ? std::string(envTok) : "admin";
 
-        // Prewarm cache with top-10 historical queries
         prewarmCache();
-
         metrics.startPeriodicReport(30);
     }
 
@@ -157,7 +157,7 @@ struct EngineContext {
             }
             if (key.empty()) continue;
             std::vector<ScoredDoc> dummy;
-            if (cache->get(key, dummy)) continue; // already cached
+            if (cache->get(key, dummy)) continue;
             auto results = (cfg.scoring == "bm25")
                 ? indexer.searchBM25Parallel(qtokens, 100)
                 : indexer.searchTFIDF(qtokens, 100);
