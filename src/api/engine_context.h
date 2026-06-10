@@ -20,7 +20,7 @@
 #include "logger.h"
 #include "query_log.h"
 #include "crawler.h"
-#include "db.h"
+#include "../db.h"
 
 static inline std::string resolvePath(const std::string &base, const std::string &p) {
     std::filesystem::path fp(p);
