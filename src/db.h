@@ -9,6 +9,27 @@ public:
     Database() : conn(nullptr) {}
     ~Database() { if (conn) PQfinish(conn); }
 
+    bool createUser(const std::string &username, const std::string &hash, const std::string &role) {
+        const char *sql =
+            "INSERT INTO users (username, password_hash, role) VALUES ($1, $2, $3) "
+            "ON CONFLICT (username) DO NOTHING RETURNING id";
+        const char *params[] = {username.c_str(), hash.c_str(), role.c_str()};
+        PGresult *res = PQexecParams(conn, sql, 3, nullptr, params, nullptr, nullptr, 0);
+        bool ok = PQntuples(res) > 0;
+        PQclear(res);
+        return ok;
+    }
+
+    bool verifyUser(const std::string &username, const std::string &hash, std::string &outRole) {
+        const char *sql = "SELECT role FROM users WHERE username=$1 AND password_hash=$2";
+        const char *params[] = {username.c_str(), hash.c_str()};
+        PGresult *res = PQexecParams(conn, sql, 2, nullptr, params, nullptr, nullptr, 0);
+        bool ok = PQntuples(res) > 0;
+        if (ok) outRole = PQgetvalue(res, 0, 0);
+        PQclear(res);
+        return ok;
+    }
+    
     bool connect(const std::string &connStr) {
         conn = PQconnectdb(connStr.c_str());
         if (PQstatus(conn) != CONNECTION_OK) {
@@ -87,6 +108,14 @@ private:
             "  indexed_at TIMESTAMP DEFAULT NOW()"
             ");"
             "CREATE INDEX IF NOT EXISTS idx_documents_path ON documents(path);";
+
+            "CREATE TABLE IF NOT EXISTS users ("
+            "  id SERIAL PRIMARY KEY,"
+            "  username TEXT UNIQUE NOT NULL,"
+            "  password_hash TEXT NOT NULL,"
+            "  role TEXT DEFAULT 'user',"
+            "  created_at TIMESTAMP DEFAULT NOW()"
+            ");"
         PGresult *res = PQexec(conn, sql);
         bool ok = PQresultStatus(res) == PGRES_COMMAND_OK;
         PQclear(res);

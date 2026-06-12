@@ -10,6 +10,7 @@
 
 #include "../httplib.h"
 #include "../crawler.h"
+#include "../auth.h" 
 
 using namespace std;
 
@@ -246,6 +247,58 @@ static string runSearch(const string &rawQuery, int topK,
 // -----------------------------------------------------------------------
 void register_routes(httplib::Server &srv, EngineContext &ctx)
 {
+
+    // POST /auth/register — admin only
+srv.Post("/auth/register", [&ctx](const httplib::Request &req, httplib::Response &res) {
+    addCORS(res);
+    if (!checkAuth(req, res, ctx)) return;
+
+    std::string username = req.has_param("username") ? req.get_param_value("username") : "";
+    std::string password = req.has_param("password") ? req.get_param_value("password") : "";
+    std::string role     = req.has_param("role")     ? req.get_param_value("role")     : "user";
+
+    if (username.empty() || password.empty()) {
+        res.status = 400;
+        res.set_content("{\"error\":\"username and password required\"}", "application/json");
+        return;
+    }
+
+    std::string hash = Auth::hashPassword(password);
+    bool ok = ctx.db.createUser(username, hash, role);
+    if (!ok) {
+        res.status = 409;
+        res.set_content("{\"error\":\"username already exists\"}", "application/json");
+        return;
+    }
+    res.set_content("{\"status\":\"ok\"}", "application/json");
+});
+    
+// POST /auth/login
+    srv.Post("/auth/login", [&ctx](const httplib::Request &req, httplib::Response &res) {
+        addCORS(res);
+
+        std::string username = req.has_param("username") ? req.get_param_value("username") : "";
+        std::string password = req.has_param("password") ? req.get_param_value("password") : "";
+
+        if (username.empty() || password.empty()) {
+            res.status = 400;
+            res.set_content("{\"error\":\"username and password required\"}", "application/json");
+            return;
+        }
+
+        std::string hash = Auth::hashPassword(password);
+        std::string role;
+        if (!ctx.db.verifyUser(username, hash, role)) {
+            res.status = 401;
+            res.set_content("{\"error\":\"invalid credentials\"}", "application/json");
+            return;
+        }
+
+        std::string token = Auth::generateToken(username, role, ctx.jwtSecret);
+        ostringstream js;
+        js << "{" << jsonKV("token", token) << "," << jsonKV("role", role) << "}";
+        res.set_content(js.str(), "application/json");
+    });
 
     // OPTIONS pre-flight
     srv.Options(".*", [](const httplib::Request &, httplib::Response &res)

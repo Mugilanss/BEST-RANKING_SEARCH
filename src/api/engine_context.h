@@ -75,7 +75,11 @@ struct EngineContext {
     std::string adminToken;
     mutable std::mutex engineMu;
 
+    std::string jwtSecret;
+    
     void init(const std::string &configPath) {
+        const char *jwtEnv = std::getenv("JWT_SECRET");
+        jwtSecret = jwtEnv ? std::string(jwtEnv) : "changeme_insecure_default";
         cfg.loadFromFile(configPath);
 
         std::string baseDir = std::filesystem::path(configPath)

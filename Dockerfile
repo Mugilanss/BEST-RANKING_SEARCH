@@ -10,7 +10,12 @@ RUN apt-get update && apt-get install -y \
     antiword \
     docx2txt \
     libpq-dev \
+    libssl-dev \
     && rm -rf /var/lib/apt/lists/*
+
+RUN mkdir -p /app/src/jwt-cpp && \
+    curl -L https://raw.githubusercontent.com/Thalhammer/jwt-cpp/master/include/jwt-cpp/jwt.h \
+    -o /app/src/jwt-cpp/jwt.h
 
 WORKDIR /app
 
