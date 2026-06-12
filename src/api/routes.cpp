@@ -509,81 +509,96 @@ void register_routes(httplib::Server &srv, EngineContext &ctx)
     // POST /index/update -- ADMIN: full sync (add + delete + modify)
     srv.Post("/index/update", [&ctx](const httplib::Request &req, httplib::Response &res)
              {
-        addCORS(res);
-        if (!checkRate(req, res, ctx)) return;
-        if (!checkAuth(req, res, ctx)) return;
+    addCORS(res);
+    if (!checkRate(req, res, ctx)) return;
+    if (!checkAuth(req, res, ctx)) return;
 
-        lock_guard<mutex> lk(ctx.engineMu);
-        auto t0 = chrono::steady_clock::now();
-        auto sr = ctx.indexer.syncFolder(ctx.cfg.docsFolder, true);
-        if (!ctx.cfg.indexFile.empty()) ctx.indexer.saveIndex(ctx.cfg.indexFile);
-        ctx.cache->clear();
-        auto ms = chrono::duration_cast<chrono::milliseconds>(
-            chrono::steady_clock::now() - t0).count();
+    lock_guard<mutex> lk(ctx.engineMu);
+    auto t0 = chrono::steady_clock::now();
+    
+    // Rebuild from folder and sync to DB
+    ctx.indexer.buildFromFolderParallel(ctx.cfg.docsFolder, true);
+    
+    // Save to DB
+    if (ctx.db.isConnected()) {
+        for (int i = 0; i < ctx.indexer.numDocs(); ++i) {
+            const Document &d = ctx.indexer.getDoc(i);
+            std::string content = ctx.indexer.loadContent(i);
+            ctx.db.saveDocument(d.path, content, d.size_bytes, d.mtime);
+        }
+    }
+    
+    if (!ctx.cfg.indexFile.empty()) ctx.indexer.saveIndex(ctx.cfg.indexFile);
+    ctx.cache->clear();
+    
+    auto ms = chrono::duration_cast<chrono::milliseconds>(
+        chrono::steady_clock::now() - t0).count();
 
-        ostringstream js;
-        js << "{" << jsonKV("status","ok") << ","
-           << jsonKV("docs",       to_string(ctx.indexer.numDocs()), false) << ","
-           << jsonKV("added",      to_string(sr.added),              false) << ","
-           << jsonKV("removed",    to_string(sr.removed),            false) << ","
-           << jsonKV("modified",   to_string(sr.modified),           false) << ","
-           << jsonKV("elapsed_ms", to_string(ms),                    false) << "}";
-        res.set_content(js.str(), "application/json"); });
-
+    ostringstream js;
+    js << "{" << jsonKV("status","ok") << ","
+       << jsonKV("docs", to_string(ctx.indexer.numDocs()), false) << ","
+       << jsonKV("elapsed_ms", to_string(ms), false) << "}";
+    res.set_content(js.str(), "application/json"); });
     // POST /crawl -- ADMIN (6.4 + 6.5)
     srv.Post("/crawl", [&ctx](const httplib::Request &req, httplib::Response &res)
              {
         addCORS(res);
-        if (!checkRate(req, res, ctx)) return;
-        if (!checkAuth(req, res, ctx)) return;
+        if (!checkRate(req, res, ctx))
+            return;
+        if (!checkAuth(req, res, ctx))
+            return;
 
-        string seedUrl = req.has_param("url")   ? req.get_param_value("url")         : "";
-        int depth      = req.has_param("depth") ? stoi(req.get_param_value("depth")) : 2;
-        int pages      = req.has_param("pages") ? stoi(req.get_param_value("pages")) : 20;
+        string seedUrl = req.has_param("url") ? req.get_param_value("url") : "";
+        int depth = req.has_param("depth") ? stoi(req.get_param_value("depth")) : 2;
+        int pages = req.has_param("pages") ? stoi(req.get_param_value("pages")) : 20;
 
         seedUrl = sanitizeInput(seedUrl, 1024);
         depth = max(1, min(depth, 5));
         pages = max(1, min(pages, 100));
 
-        if (seedUrl.empty()) {
+        if (seedUrl.empty())
+        {
             res.status = 400;
             res.set_content("{\"error\":\"missing parameter url\"}", "application/json");
             return;
         }
 
         string outputDir = ctx.cfg.docsFolder + "/crawled";
-        thread([&ctx, seedUrl, depth, pages, outputDir]() {
-            CrawlerConfig ccfg;
-            ccfg.maxPages  = pages;
-            ccfg.maxDepth  = depth;
-            ccfg.delayMs   = 500;
-            ccfg.outputDir = outputDir;
-            Crawler crawler(ccfg);
+        thread([&ctx, seedUrl, depth, pages, outputDir]()
+               {
+    CrawlerConfig ccfg;
+    ccfg.maxPages  = pages;
+    ccfg.maxDepth  = depth;
+    ccfg.delayMs   = 500;
+    ccfg.outputDir = outputDir;
+    Crawler crawler(ccfg);
 
-            int crawled = crawler.crawl(seedUrl, [&ctx](const string &filepath) {
-                lock_guard<mutex> lk(ctx.engineMu);
-                ctx.indexer.incrementalUpdateWithWAL(filepath, ctx.wal, false);
-            });
+    int crawled = crawler.crawl(seedUrl, [&ctx](const string &filepath) {
+        lock_guard<mutex> lk(ctx.engineMu);
+        ctx.indexer.incrementalUpdateWithWAL(filepath, ctx.wal, false);
+        
+        // Save to DB
+        if (ctx.db.isConnected()) {
+            int docID = ctx.indexer.numDocs() - 1;
+            if (docID >= 0) {
+                const Document &d = ctx.indexer.getDoc(docID);
+                string content = ctx.indexer.loadContent(docID);
+                ctx.db.saveDocument(d.path, content, d.size_bytes, d.mtime);
+            }
+        }
+    });
 
-            if (!ctx.cfg.indexFile.empty())
-                ctx.indexer.saveIndex(ctx.cfg.indexFile);
+    if (!ctx.cfg.indexFile.empty())
+        ctx.indexer.saveIndex(ctx.cfg.indexFile);
 
-            Logger::instance().log(LINFO,
-                "Crawl complete: " + to_string(crawled) + " pages from " + seedUrl);
-        }).detach();
-
-        ostringstream js;
-        js << "{" << jsonKV("status","crawl started") << ","
-           << jsonKV("seed",      seedUrl)                 << ","
-           << jsonKV("max_pages", to_string(pages), false) << ","
-           << jsonKV("max_depth", to_string(depth), false) << "}";
-        res.set_content(js.str(), "application/json"); });
-
-    // ------------------------------------------------------------------
-    // GET /metrics — Prometheus-format metrics (ADMIN)
-    // ------------------------------------------------------------------
-    srv.Get("/metrics", [&ctx](const httplib::Request &req, httplib::Response &res)
-            {
+    Logger::instance().log(LINFO,
+        "Crawl complete: " + to_string(crawled) + " pages from " + seedUrl); })
+            .detach();
+        // ------------------------------------------------------------------
+        // GET /metrics — Prometheus-format metrics (ADMIN)
+        // ------------------------------------------------------------------
+        srv.Get("/metrics", [&ctx](const httplib::Request &req, httplib::Response &res)
+                {
         addCORS(res);
         if (!checkRate(req, res, ctx)) return;
         if (!checkAuth(req, res, ctx)) return;
@@ -591,11 +606,11 @@ void register_routes(httplib::Server &srv, EngineContext &ctx)
         res.set_header("Content-Type", "text/plain; charset=utf-8");
         res.set_content(ctx.metrics.reportPrometheus(), "text/plain; charset=utf-8"); });
 
-    // ------------------------------------------------------------------
-    // GET /health — Health check endpoint (public, no auth required)
-    // ------------------------------------------------------------------
-    srv.Get("/health", [&ctx](const httplib::Request &req, httplib::Response &res)
-            {
+        // ------------------------------------------------------------------
+        // GET /health — Health check endpoint (public, no auth required)
+        // ------------------------------------------------------------------
+        srv.Get("/health", [&ctx](const httplib::Request &req, httplib::Response &res)
+                {
         addCORS(res);
         
         ostringstream js;
@@ -607,8 +622,8 @@ void register_routes(httplib::Server &srv, EngineContext &ctx)
            << "}";
         res.set_content(js.str(), "application/json"); });
 
-    srv.Get("/search", [&ctx](const httplib::Request &req, httplib::Response &res)
-            {
+        srv.Get("/search", [&ctx](const httplib::Request &req, httplib::Response &res)
+                {
     addCORS(res);
     if (!checkRate(req, res, ctx)) return;
 
