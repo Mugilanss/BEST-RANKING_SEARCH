@@ -107,8 +107,7 @@ private:
             "  mtime BIGINT DEFAULT 0,"
             "  indexed_at TIMESTAMP DEFAULT NOW()"
             ");"
-            "CREATE INDEX IF NOT EXISTS idx_documents_path ON documents(path);";
-
+            "CREATE INDEX IF NOT EXISTS idx_documents_path ON documents(path);"
             "CREATE TABLE IF NOT EXISTS users ("
             "  id SERIAL PRIMARY KEY,"
             "  username TEXT UNIQUE NOT NULL,"
@@ -116,6 +115,7 @@ private:
             "  role TEXT DEFAULT 'user',"
             "  created_at TIMESTAMP DEFAULT NOW()"
             ");"
+            "CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);";
         PGresult *res = PQexec(conn, sql);
         bool ok = PQresultStatus(res) == PGRES_COMMAND_OK;
         PQclear(res);
