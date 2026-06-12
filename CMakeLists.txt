@@ -102,3 +102,6 @@ set_target_properties(search_engine search_server PROPERTIES
 
 find_package(PostgreSQL REQUIRED)
 target_link_libraries(search_server PostgreSQL::PostgreSQL)
+
+find_package(OpenSSL REQUIRED)
+target_link_libraries(search_server Threads::Threads PostgreSQL::PostgreSQL OpenSSL::SSL OpenSSL::Crypto)
