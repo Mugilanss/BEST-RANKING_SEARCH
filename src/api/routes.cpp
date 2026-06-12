@@ -10,7 +10,7 @@
 
 #include "../httplib.h"
 #include "../crawler.h"
-#include "../auth.h" 
+#include "../auth.h"
 
 using namespace std;
 
@@ -49,7 +49,7 @@ static string jsonKV(const string &k, const string &v, bool isStr = true)
 // -----------------------------------------------------------------------
 // CORS
 // -----------------------------------------------------------------------
-static void addCORS(httplib::Response   &res)
+static void addCORS(httplib::Response &res)
 {
     res.set_header("Access-Control-Allow-Origin", "*");
     res.set_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
@@ -65,7 +65,7 @@ static bool checkRate(const httplib::Request &req,
 {
     // Create key combining IP + endpoint path for granular rate limiting
     string key = req.remote_addr + ":" + req.path;
-    
+
     if (!ctx.rateLimiter.allow(key))
     {
         addCORS(res);
@@ -87,7 +87,8 @@ static bool checkAuth(const httplib::Request &req,
                       EngineContext &ctx)
 {
     auto it = req.headers.find("Authorization");
-    if (it == req.headers.end()) {
+    if (it == req.headers.end())
+    {
         addCORS(res);
         res.status = 401;
         res.set_content("{\"error\":\"missing Authorization header\"}", "application/json");
@@ -98,7 +99,8 @@ static bool checkAuth(const httplib::Request &req,
     if (hdr.size() > 7 && hdr.substr(0, 7) == "Bearer ")
         token = hdr.substr(7);
 
-    if (token.empty()) {
+    if (token.empty())
+    {
         addCORS(res);
         res.status = 401;
         res.set_content("{\"error\":\"missing token\"}", "application/json");
@@ -106,11 +108,13 @@ static bool checkAuth(const httplib::Request &req,
     }
 
     // First check legacy adminToken for backward compatibility
-    if (token == ctx.adminToken) return true;
+    if (token == ctx.adminToken)
+        return true;
 
     // Then validate JWT
     std::string username, role;
-    if (!Auth::verifyToken(token, ctx.jwtSecret, username, role)) {
+    if (!Auth::verifyToken(token, ctx.jwtSecret, username, role))
+    {
         addCORS(res);
         res.status = 403;
         res.set_content("{\"error\":\"invalid or expired token\"}", "application/json");
@@ -118,7 +122,8 @@ static bool checkAuth(const httplib::Request &req,
         return false;
     }
 
-    if (role != "admin") {
+    if (role != "admin")
+    {
         addCORS(res);
         res.status = 403;
         res.set_content("{\"error\":\"admin role required\"}", "application/json");
@@ -143,7 +148,7 @@ static string sanitizeInput(const string &s, size_t maxLen = 512)
         if ((unsigned char)c >= 0x20 && (unsigned char)c < 0x7F)
             out += c;
         else if (c == '\t' || c == '\n' || c == '\r')
-            out += ' ';  // replace whitespace
+            out += ' '; // replace whitespace
     }
     return out;
 }
@@ -193,15 +198,20 @@ static string runSearch(const string &rawQuery, int topK,
     {
         auto t0 = chrono::steady_clock::now();
         auto ast = ctx.qparser->parse(query);
-        if (ast) {
+        if (ast)
+        {
             auto matched = ctx.qparser->evaluateParallel(
                 ast, ctx.indexer, ctx.indexer.getMaxThreads());
-            unordered_map<string,int> qcount;
-            for (auto &t : qtokens) if (!t.empty()) qcount[t]++;
+            unordered_map<string, int> qcount;
+            for (auto &t : qtokens)
+                if (!t.empty())
+                    qcount[t]++;
             results.reserve(matched.size());
             for (int d : matched)
                 results.push_back({d, ctx.bm25->scoreDoc(d, qcount)});
-        } else {
+        }
+        else
+        {
             results = (ctx.cfg.scoring == "bm25")
                           ? ctx.indexer.searchBM25Parallel(qtokens, topK * 10)
                           : ctx.indexer.searchTFIDF(qtokens, topK * 10);
@@ -266,7 +276,8 @@ void register_routes(httplib::Server &srv, EngineContext &ctx)
 {
 
     // POST /auth/register — admin only
-srv.Post("/auth/register", [&ctx](const httplib::Request &req, httplib::Response &res) {
+    srv.Post("/auth/register", [&ctx](const httplib::Request &req, httplib::Response &res)
+             {
     addCORS(res);
     if (!checkAuth(req, res, ctx)) return;
 
@@ -287,11 +298,11 @@ srv.Post("/auth/register", [&ctx](const httplib::Request &req, httplib::Response
         res.set_content("{\"error\":\"username already exists\"}", "application/json");
         return;
     }
-    res.set_content("{\"status\":\"ok\"}", "application/json");
-});
-    
-// POST /auth/login
-    srv.Post("/auth/login", [&ctx](const httplib::Request &req, httplib::Response &res) {
+    res.set_content("{\"status\":\"ok\"}", "application/json"); });
+
+    // POST /auth/login
+    srv.Post("/auth/login", [&ctx](const httplib::Request &req, httplib::Response &res)
+             {
         addCORS(res);
 
         std::string username = req.has_param("username") ? req.get_param_value("username") : "";
@@ -314,8 +325,7 @@ srv.Post("/auth/register", [&ctx](const httplib::Request &req, httplib::Response
         std::string token = Auth::generateToken(username, role, ctx.jwtSecret);
         ostringstream js;
         js << "{" << jsonKV("token", token) << "," << jsonKV("role", role) << "}";
-        res.set_content(js.str(), "application/json");
-    });
+        res.set_content(js.str(), "application/json"); });
 
     // OPTIONS pre-flight
     srv.Options(".*", [](const httplib::Request &, httplib::Response &res)
@@ -356,7 +366,6 @@ srv.Post("/auth/register", [&ctx](const httplib::Request &req, httplib::Response
         
         uint64_t latencyMs = 0;
         res.set_content(runSearch(query, topK, sortBy, ctx, latencyMs), "application/json"); });
-
 
     // ------------------------------------------------------------------
     // GET /document/<id>
@@ -498,7 +507,8 @@ srv.Post("/auth/register", [&ctx](const httplib::Request &req, httplib::Response
 
     // ------------------------------------------------------------------
     // POST /index/update -- ADMIN: full sync (add + delete + modify)
-    srv.Post("/index/update", [&ctx](const httplib::Request &req, httplib::Response &res) {
+    srv.Post("/index/update", [&ctx](const httplib::Request &req, httplib::Response &res)
+             {
         addCORS(res);
         if (!checkRate(req, res, ctx)) return;
         if (!checkAuth(req, res, ctx)) return;
@@ -518,11 +528,11 @@ srv.Post("/auth/register", [&ctx](const httplib::Request &req, httplib::Response
            << jsonKV("removed",    to_string(sr.removed),            false) << ","
            << jsonKV("modified",   to_string(sr.modified),           false) << ","
            << jsonKV("elapsed_ms", to_string(ms),                    false) << "}";
-        res.set_content(js.str(), "application/json");
-    });
+        res.set_content(js.str(), "application/json"); });
 
     // POST /crawl -- ADMIN (6.4 + 6.5)
-    srv.Post("/crawl", [&ctx](const httplib::Request &req, httplib::Response &res) {
+    srv.Post("/crawl", [&ctx](const httplib::Request &req, httplib::Response &res)
+             {
         addCORS(res);
         if (!checkRate(req, res, ctx)) return;
         if (!checkAuth(req, res, ctx)) return;
@@ -567,25 +577,25 @@ srv.Post("/auth/register", [&ctx](const httplib::Request &req, httplib::Response
            << jsonKV("seed",      seedUrl)                 << ","
            << jsonKV("max_pages", to_string(pages), false) << ","
            << jsonKV("max_depth", to_string(depth), false) << "}";
-        res.set_content(js.str(), "application/json");
-    });
+        res.set_content(js.str(), "application/json"); });
 
     // ------------------------------------------------------------------
     // GET /metrics — Prometheus-format metrics (ADMIN)
     // ------------------------------------------------------------------
-    srv.Get("/metrics", [&ctx](const httplib::Request &req, httplib::Response &res) {
+    srv.Get("/metrics", [&ctx](const httplib::Request &req, httplib::Response &res)
+            {
         addCORS(res);
         if (!checkRate(req, res, ctx)) return;
         if (!checkAuth(req, res, ctx)) return;
         
         res.set_header("Content-Type", "text/plain; charset=utf-8");
-        res.set_content(ctx.metrics.reportPrometheus(), "text/plain; charset=utf-8");
-    });
+        res.set_content(ctx.metrics.reportPrometheus(), "text/plain; charset=utf-8"); });
 
     // ------------------------------------------------------------------
     // GET /health — Health check endpoint (public, no auth required)
     // ------------------------------------------------------------------
-    srv.Get("/health", [&ctx](const httplib::Request &req, httplib::Response &res) {
+    srv.Get("/health", [&ctx](const httplib::Request &req, httplib::Response &res)
+            {
         addCORS(res);
         
         ostringstream js;
@@ -595,6 +605,41 @@ srv.Post("/auth/register", [&ctx](const httplib::Request &req, httplib::Response
            << jsonKV("queries", to_string(ctx.metrics.getQueries()), false) << ","
            << jsonKV("errors", to_string(ctx.metrics.getErrors()), false)
            << "}";
-        res.set_content(js.str(), "application/json");
-    });
+        res.set_content(js.str(), "application/json"); });
+
+    srv.Get("/search", [&ctx](const httplib::Request &req, httplib::Response &res)
+            {
+    addCORS(res);
+    if (!checkRate(req, res, ctx)) return;
+
+    string query  = req.has_param("q")    ? req.get_param_value("q")       : "";
+    int    topK   = req.has_param("k")    ? stoi(req.get_param_value("k")) : 10;
+    string sortBy = req.has_param("sort") ? req.get_param_value("sort")    : "score";
+    topK = max(1, min(topK, 100));
+
+    if (query.empty()) {
+        res.status = 400;
+        res.set_content("{\"error\":\"missing parameter q\"}", "application/json");
+        return;
+    }
+
+    if (!isValidInput(query, 1000)) {
+        res.status = 400;
+        res.set_content("{\"error\":\"invalid query\"}", "application/json");
+        return;
+    }
+
+    if (sortBy != "score" && sortBy != "date" && sortBy != "size")
+        sortBy = "score";
+
+    try {
+        uint64_t latencyMs = 0;
+        res.set_content(runSearch(query, topK, sortBy, ctx, latencyMs), "application/json");
+    } catch (const std::exception &e) {
+        res.status = 500;
+        res.set_content(std::string("{\"error\":\"") + e.what() + "\"}", "application/json");
+    } catch (...) {
+        res.status = 500;
+        res.set_content("{\"error\":\"unknown exception in search\"}", "application/json");
+    } });
 }
