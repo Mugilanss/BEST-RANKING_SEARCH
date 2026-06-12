@@ -14,9 +14,6 @@
 
 using namespace std;
 
-// -----------------------------------------------------------------------
-// JSON helpers
-// -----------------------------------------------------------------------
 static string jsonStr(const string &s)
 {
     string out;
@@ -24,18 +21,12 @@ static string jsonStr(const string &s)
     out += '"';
     for (char c : s)
     {
-        if (c == '"')
-            out += "\\\"";
-        else if (c == '\\')
-            out += "\\\\";
-        else if (c == '\n')
-            out += "\\n";
-        else if (c == '\r')
-            out += "\\r";
-        else if (c == '\t')
-            out += "\\t";
-        else
-            out += c;
+        if (c == '"') out += "\\\"";
+        else if (c == '\\') out += "\\\\";
+        else if (c == '\n') out += "\\n";
+        else if (c == '\r') out += "\\r";
+        else if (c == '\t') out += "\\t";
+        else out += c;
     }
     out += '"';
     return out;
@@ -46,9 +37,6 @@ static string jsonKV(const string &k, const string &v, bool isStr = true)
     return jsonStr(k) + ":" + (isStr ? jsonStr(v) : v);
 }
 
-// -----------------------------------------------------------------------
-// CORS
-// -----------------------------------------------------------------------
 static void addCORS(httplib::Response &res)
 {
     res.set_header("Access-Control-Allow-Origin", "*");
@@ -56,16 +44,9 @@ static void addCORS(httplib::Response &res)
     res.set_header("Access-Control-Allow-Headers", "Content-Type, Authorization");
 }
 
-// -----------------------------------------------------------------------
-// Rate limit guard
-// -----------------------------------------------------------------------
-static bool checkRate(const httplib::Request &req,
-                      httplib::Response &res,
-                      EngineContext &ctx)
+static bool checkRate(const httplib::Request &req, httplib::Response &res, EngineContext &ctx)
 {
-    // Create key combining IP + endpoint path for granular rate limiting
     string key = req.remote_addr + ":" + req.path;
-
     if (!ctx.rateLimiter.allow(key))
     {
         addCORS(res);
@@ -78,13 +59,7 @@ static bool checkRate(const httplib::Request &req,
     return true;
 }
 
-// -----------------------------------------------------------------------
-// 6.5 Token auth guard — checks Authorization: Bearer <token>
-// Returns false and writes 401 if token missing or wrong.
-// -----------------------------------------------------------------------
-static bool checkAuth(const httplib::Request &req,
-                      httplib::Response &res,
-                      EngineContext &ctx)
+static bool checkAuth(const httplib::Request &req, httplib::Response &res, EngineContext &ctx)
 {
     auto it = req.headers.find("Authorization");
     if (it == req.headers.end())
@@ -107,11 +82,8 @@ static bool checkAuth(const httplib::Request &req,
         return false;
     }
 
-    // First check legacy adminToken for backward compatibility
-    if (token == ctx.adminToken)
-        return true;
+    if (token == ctx.adminToken) return true;
 
-    // Then validate JWT
     std::string username, role;
     if (!Auth::verifyToken(token, ctx.jwtSecret, username, role))
     {
@@ -133,37 +105,24 @@ static bool checkAuth(const httplib::Request &req,
     return true;
 }
 
-// -----------------------------------------------------------------------
-// 6.5 Input sanitization — strip control chars, limit length
-// -----------------------------------------------------------------------
 static string sanitizeInput(const string &s, size_t maxLen = 512)
 {
     string out;
     out.reserve(min(s.size(), maxLen));
     for (char c : s)
     {
-        if (out.size() >= maxLen)
-            break;
-        // Keep printable characters and common punctuation, drop control chars
-        if ((unsigned char)c >= 0x20 && (unsigned char)c < 0x7F)
-            out += c;
-        else if (c == '\t' || c == '\n' || c == '\r')
-            out += ' '; // replace whitespace
+        if (out.size() >= maxLen) break;
+        if ((unsigned char)c >= 0x20 && (unsigned char)c < 0x7F) out += c;
+        else if (c == '\t' || c == '\n' || c == '\r') out += ' ';
     }
     return out;
 }
 
-// -----------------------------------------------------------------------
-// Input validation helper — check for SQL injection-like patterns
-// -----------------------------------------------------------------------
 static bool isValidInput(const string &s, size_t maxLen = 512)
 {
     return s.size() <= maxLen;
 }
 
-// -----------------------------------------------------------------------
-// Search helper
-// -----------------------------------------------------------------------
 static string runSearch(const string &rawQuery, int topK,
                         const string &sortBy,
                         EngineContext &ctx,
@@ -173,14 +132,12 @@ static string runSearch(const string &rawQuery, int topK,
 
     vector<string> qtokens = ctx.tokenizer.tokenize(query);
     if (ctx.cfg.useStemming)
-        for (auto &t : qtokens)
-            t = ctx.tokenizer.stem(t);
+        for (auto &t : qtokens) t = ctx.tokenizer.stem(t);
 
     string cacheKey;
     for (size_t i = 0; i < qtokens.size(); ++i)
     {
-        if (i)
-            cacheKey += ' ';
+        if (i) cacheKey += ' ';
         cacheKey += qtokens[i];
     }
 
@@ -200,33 +157,26 @@ static string runSearch(const string &rawQuery, int topK,
         auto ast = ctx.qparser->parse(query);
         if (ast)
         {
-            auto matched = ctx.qparser->evaluateParallel(
-                ast, ctx.indexer, ctx.indexer.getMaxThreads());
+            auto matched = ctx.qparser->evaluateParallel(ast, ctx.indexer, ctx.indexer.getMaxThreads());
             unordered_map<string, int> qcount;
-            for (auto &t : qtokens)
-                if (!t.empty())
-                    qcount[t]++;
+            for (auto &t : qtokens) if (!t.empty()) qcount[t]++;
             results.reserve(matched.size());
-            for (int d : matched)
-                results.push_back({d, ctx.bm25->scoreDoc(d, qcount)});
+            for (int d : matched) results.push_back({d, ctx.bm25->scoreDoc(d, qcount)});
         }
         else
         {
             results = (ctx.cfg.scoring == "bm25")
-                          ? ctx.indexer.searchBM25Parallel(qtokens, topK * 10)
-                          : ctx.indexer.searchTFIDF(qtokens, topK * 10);
+                ? ctx.indexer.searchBM25Parallel(qtokens, topK * 10)
+                : ctx.indexer.searchTFIDF(qtokens, topK * 10);
         }
         auto t1 = chrono::steady_clock::now();
         latencyMs = (uint64_t)chrono::duration_cast<chrono::milliseconds>(t1 - t0).count();
         ctx.metrics.observeQueryLatencyMs(latencyMs);
         ctx.metrics.observeQuery(false);
-        if (!cacheKey.empty())
-            ctx.cache->put(cacheKey, results);
+        if (!cacheKey.empty()) ctx.cache->put(cacheKey, results);
     }
 
-    // 6.3 Log every query
-    if (!query.empty())
-        ctx.queryLog->record(query);
+    if (!query.empty()) ctx.queryLog->record(query);
 
     if (sortBy == "date")
         sort(results.begin(), results.end(), [&](auto &a, auto &b)
@@ -238,12 +188,10 @@ static string runSearch(const string &rawQuery, int topK,
         sort(results.begin(), results.end(), [](auto &a, auto &b)
              { return a.score > b.score; });
 
-    if ((int)results.size() > topK)
-        results.resize(topK);
+    if ((int)results.size() > topK) results.resize(topK);
 
     ostringstream js;
-    js << "{"
-       << jsonKV("query", query) << ","
+    js << "{" << jsonKV("query", query) << ","
        << jsonKV("cache_hit", hit ? "true" : "false", false) << ","
        << jsonKV("latency_ms", to_string(latencyMs), false) << ","
        << "\"results\":[";
@@ -254,8 +202,7 @@ static string runSearch(const string &rawQuery, int topK,
         const Document &d = ctx.indexer.getDoc(r.id);
         string snippet = ctx.indexer.makeSnippet(r.id, qtokens, 300);
         double score = isfinite(r.score) ? r.score : 0.0;
-        if (i)
-            js << ",";
+        if (i) js << ",";
         js << "{"
            << jsonKV("docID", to_string(r.id), false) << ","
            << jsonKV("path", d.path) << ","
@@ -269,51 +216,46 @@ static string runSearch(const string &rawQuery, int topK,
     return js.str();
 }
 
-// -----------------------------------------------------------------------
-// register_routes
-// -----------------------------------------------------------------------
 void register_routes(httplib::Server &srv, EngineContext &ctx)
 {
+    // OPTIONS pre-flight
+    srv.Options(".*", [](const httplib::Request &, httplib::Response &res)
+                { addCORS(res); res.status = 204; });
 
-    // POST /auth/register — admin only
+    // POST /auth/register
     srv.Post("/auth/register", [&ctx](const httplib::Request &req, httplib::Response &res)
              {
-    addCORS(res);
-    if (!checkAuth(req, res, ctx)) return;
-
-    std::string username = req.has_param("username") ? req.get_param_value("username") : "";
-    std::string password = req.has_param("password") ? req.get_param_value("password") : "";
-    std::string role     = req.has_param("role")     ? req.get_param_value("role")     : "user";
-
-    if (username.empty() || password.empty()) {
-        res.status = 400;
-        res.set_content("{\"error\":\"username and password required\"}", "application/json");
-        return;
-    }
-
-    std::string hash = Auth::hashPassword(password);
-    bool ok = ctx.db.createUser(username, hash, role);
-    if (!ok) {
-        res.status = 409;
-        res.set_content("{\"error\":\"username already exists\"}", "application/json");
-        return;
-    }
-    res.set_content("{\"status\":\"ok\"}", "application/json"); });
-
-    // POST /auth/login
-    srv.Post("/auth/login", [&ctx](const httplib::Request &req, httplib::Response &res)
-             {
         addCORS(res);
-
+        if (!checkAuth(req, res, ctx)) return;
         std::string username = req.has_param("username") ? req.get_param_value("username") : "";
         std::string password = req.has_param("password") ? req.get_param_value("password") : "";
-
+        std::string role     = req.has_param("role")     ? req.get_param_value("role")     : "user";
         if (username.empty() || password.empty()) {
             res.status = 400;
             res.set_content("{\"error\":\"username and password required\"}", "application/json");
             return;
         }
+        std::string hash = Auth::hashPassword(password);
+        bool ok = ctx.db.createUser(username, hash, role);
+        if (!ok) {
+            res.status = 409;
+            res.set_content("{\"error\":\"username already exists\"}", "application/json");
+            return;
+        }
+        res.set_content("{\"status\":\"ok\"}", "application/json");
+    });
 
+    // POST /auth/login
+    srv.Post("/auth/login", [&ctx](const httplib::Request &req, httplib::Response &res)
+             {
+        addCORS(res);
+        std::string username = req.has_param("username") ? req.get_param_value("username") : "";
+        std::string password = req.has_param("password") ? req.get_param_value("password") : "";
+        if (username.empty() || password.empty()) {
+            res.status = 400;
+            res.set_content("{\"error\":\"username and password required\"}", "application/json");
+            return;
+        }
         std::string hash = Auth::hashPassword(password);
         std::string role;
         if (!ctx.db.verifyUser(username, hash, role)) {
@@ -321,60 +263,49 @@ void register_routes(httplib::Server &srv, EngineContext &ctx)
             res.set_content("{\"error\":\"invalid credentials\"}", "application/json");
             return;
         }
-
         std::string token = Auth::generateToken(username, role, ctx.jwtSecret);
         ostringstream js;
         js << "{" << jsonKV("token", token) << "," << jsonKV("role", role) << "}";
-        res.set_content(js.str(), "application/json"); });
+        res.set_content(js.str(), "application/json");
+    });
 
-    // OPTIONS pre-flight
-    srv.Options(".*", [](const httplib::Request &, httplib::Response &res)
-                {
-        addCORS(res); res.status = 204; });
-
-    // ------------------------------------------------------------------
     // GET /search
-    // ------------------------------------------------------------------
     srv.Get("/search", [&ctx](const httplib::Request &req, httplib::Response &res)
             {
         addCORS(res);
         if (!checkRate(req, res, ctx)) return;
-
-        string query  = req.has_param("q")    ? req.get_param_value("q")              : "";
-        int    topK   = req.has_param("k")    ? stoi(req.get_param_value("k"))        : 10;
-        string sortBy = req.has_param("sort") ? req.get_param_value("sort")           : "score";
+        string query  = req.has_param("q")    ? req.get_param_value("q")       : "";
+        int    topK   = req.has_param("k")    ? stoi(req.get_param_value("k")) : 10;
+        string sortBy = req.has_param("sort") ? req.get_param_value("sort")    : "score";
         topK = max(1, min(topK, 100));
-
         if (query.empty()) {
             res.status = 400;
             res.set_content("{\"error\":\"missing parameter q\"}", "application/json");
             return;
         }
-        
-        // Validate input (check for injection patterns)
         if (!isValidInput(query, 1000)) {
             res.status = 400;
-            res.set_content("{\"error\":\"invalid query - suspicious characters detected\"}", "application/json");
-            ctx.metrics.recordError("input_validation", "Invalid query detected");
+            res.set_content("{\"error\":\"invalid query\"}", "application/json");
             return;
         }
-        
-        // Validate sortBy parameter
-        if (sortBy != "score" && sortBy != "date" && sortBy != "size") {
-            sortBy = "score";
+        if (sortBy != "score" && sortBy != "date" && sortBy != "size") sortBy = "score";
+        try {
+            uint64_t latencyMs = 0;
+            res.set_content(runSearch(query, topK, sortBy, ctx, latencyMs), "application/json");
+        } catch (const std::exception &e) {
+            res.status = 500;
+            res.set_content(std::string("{\"error\":\"") + e.what() + "\"}", "application/json");
+        } catch (...) {
+            res.status = 500;
+            res.set_content("{\"error\":\"unknown exception in search\"}", "application/json");
         }
-        
-        uint64_t latencyMs = 0;
-        res.set_content(runSearch(query, topK, sortBy, ctx, latencyMs), "application/json"); });
+    });
 
-    // ------------------------------------------------------------------
     // GET /document/<id>
-    // ------------------------------------------------------------------
     srv.Get(R"(/document/(\d+))", [&ctx](const httplib::Request &req, httplib::Response &res)
             {
         addCORS(res);
         if (!checkRate(req, res, ctx)) return;
-
         int id = stoi(req.matches[1]);
         if (id < 0 || id >= ctx.indexer.numDocs()) {
             res.status = 404;
@@ -391,16 +322,14 @@ void register_routes(httplib::Server &srv, EngineContext &ctx)
            << jsonKV("mtime",   to_string(d.mtime),     false) << ","
            << jsonKV("content", content)
            << "}";
-        res.set_content(js.str(), "application/json"); });
+        res.set_content(js.str(), "application/json");
+    });
 
-    // ------------------------------------------------------------------
     // GET /stats
-    // ------------------------------------------------------------------
     srv.Get("/stats", [&ctx](const httplib::Request &req, httplib::Response &res)
             {
         addCORS(res);
         if (!checkRate(req, res, ctx)) return;
-
         auto topTerms = ctx.indexer.getTopTerms(20);
         ostringstream termsArr;
         termsArr << "[";
@@ -410,7 +339,6 @@ void register_routes(httplib::Server &srv, EngineContext &ctx)
                      << jsonKV("df", to_string(topTerms[i].second), false) << "}";
         }
         termsArr << "]";
-
         ostringstream js;
         js << "{"
            << jsonKV("docs",           to_string(ctx.indexer.numDocs()),             false) << ","
@@ -426,23 +354,19 @@ void register_routes(httplib::Server &srv, EngineContext &ctx)
            << jsonKV("query_log_size", to_string(ctx.queryLog->size()),              false) << ","
            << "\"top_terms\":" << termsArr.str()
            << "}";
-        res.set_content(js.str(), "application/json"); });
+        res.set_content(js.str(), "application/json");
+    });
 
-    // ------------------------------------------------------------------
-    // GET /autocomplete — trie prefix + query-log suggestions (6.3)
-    // ------------------------------------------------------------------
+    // GET /autocomplete
     srv.Get("/autocomplete", [&ctx](const httplib::Request &req, httplib::Response &res)
             {
         addCORS(res);
         if (!checkRate(req, res, ctx)) return;
-
         string prefix = req.has_param("q") ? sanitizeInput(req.get_param_value("q")) : "";
         int k = req.has_param("k") ? stoi(req.get_param_value("k")) : 5;
         k = max(1, min(k, 20));
-
         auto termSuggestions  = ctx.indexer.autocomplete(prefix, k);
-        auto querySuggestions = ctx.queryLog->suggest(prefix, k);  // 6.3
-
+        auto querySuggestions = ctx.queryLog->suggest(prefix, k);
         ostringstream js;
         js << "{" << jsonKV("prefix", prefix) << ",\"suggestions\":[";
         for (size_t i = 0; i < termSuggestions.size(); ++i) {
@@ -457,20 +381,17 @@ void register_routes(httplib::Server &srv, EngineContext &ctx)
             js << jsonStr(querySuggestions[i]);
         }
         js << "]}";
-        res.set_content(js.str(), "application/json"); });
+        res.set_content(js.str(), "application/json");
+    });
 
-    // ------------------------------------------------------------------
-    // GET /popular — top queries from query log (6.3)
-    // ------------------------------------------------------------------
+    // GET /popular
     srv.Get("/popular", [&ctx](const httplib::Request &req, httplib::Response &res)
             {
         addCORS(res);
         if (!checkRate(req, res, ctx)) return;
-
         int k = req.has_param("k") ? stoi(req.get_param_value("k")) : 10;
         k = max(1, min(k, 50));
         auto top = ctx.queryLog->topQueries(k);
-
         ostringstream js;
         js << "{\"popular\":[";
         for (size_t i = 0; i < top.size(); ++i) {
@@ -479,140 +400,124 @@ void register_routes(httplib::Server &srv, EngineContext &ctx)
                << jsonKV("count", to_string(top[i].second), false) << "}";
         }
         js << "]}";
-        res.set_content(js.str(), "application/json"); });
+        res.set_content(js.str(), "application/json");
+    });
 
-    // ------------------------------------------------------------------
-    // POST /index/rebuild  — ADMIN (6.5 token auth)
-    // ------------------------------------------------------------------
+    // POST /index/rebuild
     srv.Post("/index/rebuild", [&ctx](const httplib::Request &req, httplib::Response &res)
              {
         addCORS(res);
         if (!checkRate(req, res, ctx)) return;
         if (!checkAuth(req, res, ctx)) return;
-
         lock_guard<mutex> lk(ctx.engineMu);
         auto t0 = chrono::steady_clock::now();
         ctx.indexer.buildFromFolderParallel(ctx.cfg.docsFolder, true);
+        if (ctx.db.isConnected()) {
+            for (int i = 0; i < ctx.indexer.numDocs(); ++i) {
+                const Document &d = ctx.indexer.getDoc(i);
+                std::string content = ctx.indexer.loadContent(i);
+                ctx.db.saveDocument(d.path, content, d.size_bytes, d.mtime);
+            }
+        }
         if (!ctx.cfg.indexFile.empty()) ctx.indexer.saveIndex(ctx.cfg.indexFile);
         ctx.cache->clear();
         ctx.prewarmCache();
-        auto ms = chrono::duration_cast<chrono::milliseconds>(
-            chrono::steady_clock::now() - t0).count();
-
+        auto ms = chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now() - t0).count();
         ostringstream js;
         js << "{" << jsonKV("status","ok") << ","
            << jsonKV("docs", to_string(ctx.indexer.numDocs()), false) << ","
            << jsonKV("elapsed_ms", to_string(ms), false) << "}";
-        res.set_content(js.str(), "application/json"); });
+        res.set_content(js.str(), "application/json");
+    });
 
-    // ------------------------------------------------------------------
-    // POST /index/update -- ADMIN: full sync (add + delete + modify)
+    // POST /index/update
     srv.Post("/index/update", [&ctx](const httplib::Request &req, httplib::Response &res)
              {
-    addCORS(res);
-    if (!checkRate(req, res, ctx)) return;
-    if (!checkAuth(req, res, ctx)) return;
-
-    lock_guard<mutex> lk(ctx.engineMu);
-    auto t0 = chrono::steady_clock::now();
-    
-    // Rebuild from folder and sync to DB
-    ctx.indexer.buildFromFolderParallel(ctx.cfg.docsFolder, true);
-    
-    // Save to DB
-    if (ctx.db.isConnected()) {
-        for (int i = 0; i < ctx.indexer.numDocs(); ++i) {
-            const Document &d = ctx.indexer.getDoc(i);
-            std::string content = ctx.indexer.loadContent(i);
-            ctx.db.saveDocument(d.path, content, d.size_bytes, d.mtime);
+        addCORS(res);
+        if (!checkRate(req, res, ctx)) return;
+        if (!checkAuth(req, res, ctx)) return;
+        lock_guard<mutex> lk(ctx.engineMu);
+        auto t0 = chrono::steady_clock::now();
+        ctx.indexer.buildFromFolderParallel(ctx.cfg.docsFolder, true);
+        if (ctx.db.isConnected()) {
+            for (int i = 0; i < ctx.indexer.numDocs(); ++i) {
+                const Document &d = ctx.indexer.getDoc(i);
+                std::string content = ctx.indexer.loadContent(i);
+                ctx.db.saveDocument(d.path, content, d.size_bytes, d.mtime);
+            }
         }
-    }
-    
-    if (!ctx.cfg.indexFile.empty()) ctx.indexer.saveIndex(ctx.cfg.indexFile);
-    ctx.cache->clear();
-    
-    auto ms = chrono::duration_cast<chrono::milliseconds>(
-        chrono::steady_clock::now() - t0).count();
+        if (!ctx.cfg.indexFile.empty()) ctx.indexer.saveIndex(ctx.cfg.indexFile);
+        ctx.cache->clear();
+        auto ms = chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now() - t0).count();
+        ostringstream js;
+        js << "{" << jsonKV("status","ok") << ","
+           << jsonKV("docs", to_string(ctx.indexer.numDocs()), false) << ","
+           << jsonKV("elapsed_ms", to_string(ms), false) << "}";
+        res.set_content(js.str(), "application/json");
+    });
 
-    ostringstream js;
-    js << "{" << jsonKV("status","ok") << ","
-       << jsonKV("docs", to_string(ctx.indexer.numDocs()), false) << ","
-       << jsonKV("elapsed_ms", to_string(ms), false) << "}";
-    res.set_content(js.str(), "application/json"); });
-    // POST /crawl -- ADMIN (6.4 + 6.5)
+    // POST /crawl
     srv.Post("/crawl", [&ctx](const httplib::Request &req, httplib::Response &res)
              {
         addCORS(res);
-        if (!checkRate(req, res, ctx))
-            return;
-        if (!checkAuth(req, res, ctx))
-            return;
-
-        string seedUrl = req.has_param("url") ? req.get_param_value("url") : "";
-        int depth = req.has_param("depth") ? stoi(req.get_param_value("depth")) : 2;
-        int pages = req.has_param("pages") ? stoi(req.get_param_value("pages")) : 20;
-
+        if (!checkRate(req, res, ctx)) return;
+        if (!checkAuth(req, res, ctx)) return;
+        string seedUrl = req.has_param("url")   ? req.get_param_value("url")         : "";
+        int depth      = req.has_param("depth") ? stoi(req.get_param_value("depth")) : 2;
+        int pages      = req.has_param("pages") ? stoi(req.get_param_value("pages")) : 20;
         seedUrl = sanitizeInput(seedUrl, 1024);
         depth = max(1, min(depth, 5));
         pages = max(1, min(pages, 100));
-
-        if (seedUrl.empty())
-        {
+        if (seedUrl.empty()) {
             res.status = 400;
             res.set_content("{\"error\":\"missing parameter url\"}", "application/json");
             return;
         }
-
         string outputDir = ctx.cfg.docsFolder + "/crawled";
-        thread([&ctx, seedUrl, depth, pages, outputDir]()
-               {
-    CrawlerConfig ccfg;
-    ccfg.maxPages  = pages;
-    ccfg.maxDepth  = depth;
-    ccfg.delayMs   = 500;
-    ccfg.outputDir = outputDir;
-    Crawler crawler(ccfg);
-
-    int crawled = crawler.crawl(seedUrl, [&ctx](const string &filepath) {
-        lock_guard<mutex> lk(ctx.engineMu);
-        ctx.indexer.incrementalUpdateWithWAL(filepath, ctx.wal, false);
-        
-        // Save to DB
-        if (ctx.db.isConnected()) {
-            int docID = ctx.indexer.numDocs() - 1;
-            if (docID >= 0) {
-                const Document &d = ctx.indexer.getDoc(docID);
-                string content = ctx.indexer.loadContent(docID);
-                ctx.db.saveDocument(d.path, content, d.size_bytes, d.mtime);
-            }
-        }
+        thread([&ctx, seedUrl, depth, pages, outputDir]() {
+            CrawlerConfig ccfg;
+            ccfg.maxPages  = pages;
+            ccfg.maxDepth  = depth;
+            ccfg.delayMs   = 500;
+            ccfg.outputDir = outputDir;
+            Crawler crawler(ccfg);
+            int crawled = crawler.crawl(seedUrl, [&ctx](const string &filepath) {
+                lock_guard<mutex> lk(ctx.engineMu);
+                ctx.indexer.incrementalUpdateWithWAL(filepath, ctx.wal, false);
+                if (ctx.db.isConnected()) {
+                    int docID = ctx.indexer.numDocs() - 1;
+                    if (docID >= 0) {
+                        const Document &d = ctx.indexer.getDoc(docID);
+                        string content = ctx.indexer.loadContent(docID);
+                        ctx.db.saveDocument(d.path, content, d.size_bytes, d.mtime);
+                    }
+                }
+            });
+            if (!ctx.cfg.indexFile.empty()) ctx.indexer.saveIndex(ctx.cfg.indexFile);
+            Logger::instance().log(LINFO, "Crawl complete: " + to_string(crawled) + " pages from " + seedUrl);
+        }).detach();
+        ostringstream js;
+        js << "{" << jsonKV("status","crawl started") << ","
+           << jsonKV("seed",      seedUrl)                 << ","
+           << jsonKV("max_pages", to_string(pages), false) << ","
+           << jsonKV("max_depth", to_string(depth), false) << "}";
+        res.set_content(js.str(), "application/json");
     });
 
-    if (!ctx.cfg.indexFile.empty())
-        ctx.indexer.saveIndex(ctx.cfg.indexFile);
-
-    Logger::instance().log(LINFO,
-        "Crawl complete: " + to_string(crawled) + " pages from " + seedUrl); })
-            .detach();
-        // ------------------------------------------------------------------
-        // GET /metrics — Prometheus-format metrics (ADMIN)
-        // ------------------------------------------------------------------
-        srv.Get("/metrics", [&ctx](const httplib::Request &req, httplib::Response &res)
-                {
+    // GET /metrics
+    srv.Get("/metrics", [&ctx](const httplib::Request &req, httplib::Response &res)
+            {
         addCORS(res);
         if (!checkRate(req, res, ctx)) return;
         if (!checkAuth(req, res, ctx)) return;
-        
         res.set_header("Content-Type", "text/plain; charset=utf-8");
-        res.set_content(ctx.metrics.reportPrometheus(), "text/plain; charset=utf-8"); });
+        res.set_content(ctx.metrics.reportPrometheus(), "text/plain; charset=utf-8");
+    });
 
-        // ------------------------------------------------------------------
-        // GET /health — Health check endpoint (public, no auth required)
-        // ------------------------------------------------------------------
-        srv.Get("/health", [&ctx](const httplib::Request &req, httplib::Response &res)
-                {
+    // GET /health
+    srv.Get("/health", [&ctx](const httplib::Request &, httplib::Response &res)
+            {
         addCORS(res);
-        
         ostringstream js;
         js << "{"
            << jsonKV("status", "ok") << ","
@@ -620,41 +525,6 @@ void register_routes(httplib::Server &srv, EngineContext &ctx)
            << jsonKV("queries", to_string(ctx.metrics.getQueries()), false) << ","
            << jsonKV("errors", to_string(ctx.metrics.getErrors()), false)
            << "}";
-        res.set_content(js.str(), "application/json"); });
-
-        srv.Get("/search", [&ctx](const httplib::Request &req, httplib::Response &res)
-                {
-    addCORS(res);
-    if (!checkRate(req, res, ctx)) return;
-
-    string query  = req.has_param("q")    ? req.get_param_value("q")       : "";
-    int    topK   = req.has_param("k")    ? stoi(req.get_param_value("k")) : 10;
-    string sortBy = req.has_param("sort") ? req.get_param_value("sort")    : "score";
-    topK = max(1, min(topK, 100));
-
-    if (query.empty()) {
-        res.status = 400;
-        res.set_content("{\"error\":\"missing parameter q\"}", "application/json");
-        return;
-    }
-
-    if (!isValidInput(query, 1000)) {
-        res.status = 400;
-        res.set_content("{\"error\":\"invalid query\"}", "application/json");
-        return;
-    }
-
-    if (sortBy != "score" && sortBy != "date" && sortBy != "size")
-        sortBy = "score";
-
-    try {
-        uint64_t latencyMs = 0;
-        res.set_content(runSearch(query, topK, sortBy, ctx, latencyMs), "application/json");
-    } catch (const std::exception &e) {
-        res.status = 500;
-        res.set_content(std::string("{\"error\":\"") + e.what() + "\"}", "application/json");
-    } catch (...) {
-        res.status = 500;
-        res.set_content("{\"error\":\"unknown exception in search\"}", "application/json");
-    } });
+        res.set_content(js.str(), "application/json");
+    });
 }
