@@ -49,7 +49,7 @@ static string jsonKV(const string &k, const string &v, bool isStr = true)
 // -----------------------------------------------------------------------
 // CORS
 // -----------------------------------------------------------------------
-static void addCORS(httplib::Response &res)
+static void addCORS(httplib::Response   &res)
 {
     res.set_header("Access-Control-Allow-Origin", "*");
     res.set_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
@@ -87,27 +87,44 @@ static bool checkAuth(const httplib::Request &req,
                       EngineContext &ctx)
 {
     auto it = req.headers.find("Authorization");
-    if (it == req.headers.end())
-    {
+    if (it == req.headers.end()) {
         addCORS(res);
         res.status = 401;
         res.set_content("{\"error\":\"missing Authorization header\"}", "application/json");
-        ctx.metrics.recordError("auth_missing", "No Authorization header");
         return false;
     }
     const string &hdr = it->second;
     string token;
     if (hdr.size() > 7 && hdr.substr(0, 7) == "Bearer ")
         token = hdr.substr(7);
-    
-    if (token.empty() || token != ctx.adminToken)
-    {
+
+    if (token.empty()) {
         addCORS(res);
-        res.status = 403;
-        res.set_content("{\"error\":\"invalid or missing token\"}", "application/json");
-        ctx.metrics.recordError("auth_invalid", "Invalid/missing token from: " + req.remote_addr);
+        res.status = 401;
+        res.set_content("{\"error\":\"missing token\"}", "application/json");
         return false;
     }
+
+    // First check legacy adminToken for backward compatibility
+    if (token == ctx.adminToken) return true;
+
+    // Then validate JWT
+    std::string username, role;
+    if (!Auth::verifyToken(token, ctx.jwtSecret, username, role)) {
+        addCORS(res);
+        res.status = 403;
+        res.set_content("{\"error\":\"invalid or expired token\"}", "application/json");
+        ctx.metrics.recordError("auth_invalid", "Invalid JWT from: " + req.remote_addr);
+        return false;
+    }
+
+    if (role != "admin") {
+        addCORS(res);
+        res.status = 403;
+        res.set_content("{\"error\":\"admin role required\"}", "application/json");
+        return false;
+    }
+
     return true;
 }
 
