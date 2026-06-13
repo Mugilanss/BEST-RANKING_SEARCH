@@ -105,3 +105,5 @@ target_link_libraries(search_server PostgreSQL::PostgreSQL)
 
 find_package(OpenSSL REQUIRED)
 target_link_libraries(search_server Threads::Threads PostgreSQL::PostgreSQL OpenSSL::SSL OpenSSL::Crypto)
+
+target_compile_definitions(search_server PRIVATE CPPHTTPLIB_OPENSSL_SUPPORT)

@@ -21,12 +21,18 @@ static string jsonStr(const string &s)
     out += '"';
     for (char c : s)
     {
-        if (c == '"') out += "\\\"";
-        else if (c == '\\') out += "\\\\";
-        else if (c == '\n') out += "\\n";
-        else if (c == '\r') out += "\\r";
-        else if (c == '\t') out += "\\t";
-        else out += c;
+        if (c == '"')
+            out += "\\\"";
+        else if (c == '\\')
+            out += "\\\\";
+        else if (c == '\n')
+            out += "\\n";
+        else if (c == '\r')
+            out += "\\r";
+        else if (c == '\t')
+            out += "\\t";
+        else
+            out += c;
     }
     out += '"';
     return out;
@@ -82,7 +88,8 @@ static bool checkAuth(const httplib::Request &req, httplib::Response &res, Engin
         return false;
     }
 
-    if (token == ctx.adminToken) return true;
+    if (token == ctx.adminToken)
+        return true;
 
     std::string username, role;
     if (!Auth::verifyToken(token, ctx.jwtSecret, username, role))
@@ -111,9 +118,12 @@ static string sanitizeInput(const string &s, size_t maxLen = 512)
     out.reserve(min(s.size(), maxLen));
     for (char c : s)
     {
-        if (out.size() >= maxLen) break;
-        if ((unsigned char)c >= 0x20 && (unsigned char)c < 0x7F) out += c;
-        else if (c == '\t' || c == '\n' || c == '\r') out += ' ';
+        if (out.size() >= maxLen)
+            break;
+        if ((unsigned char)c >= 0x20 && (unsigned char)c < 0x7F)
+            out += c;
+        else if (c == '\t' || c == '\n' || c == '\r')
+            out += ' ';
     }
     return out;
 }
@@ -132,12 +142,14 @@ static string runSearch(const string &rawQuery, int topK,
 
     vector<string> qtokens = ctx.tokenizer.tokenize(query);
     if (ctx.cfg.useStemming)
-        for (auto &t : qtokens) t = ctx.tokenizer.stem(t);
+        for (auto &t : qtokens)
+            t = ctx.tokenizer.stem(t);
 
     string cacheKey;
     for (size_t i = 0; i < qtokens.size(); ++i)
     {
-        if (i) cacheKey += ' ';
+        if (i)
+            cacheKey += ' ';
         cacheKey += qtokens[i];
     }
 
@@ -159,24 +171,29 @@ static string runSearch(const string &rawQuery, int topK,
         {
             auto matched = ctx.qparser->evaluateParallel(ast, ctx.indexer, ctx.indexer.getMaxThreads());
             unordered_map<string, int> qcount;
-            for (auto &t : qtokens) if (!t.empty()) qcount[t]++;
+            for (auto &t : qtokens)
+                if (!t.empty())
+                    qcount[t]++;
             results.reserve(matched.size());
-            for (int d : matched) results.push_back({d, ctx.bm25->scoreDoc(d, qcount)});
+            for (int d : matched)
+                results.push_back({d, ctx.bm25->scoreDoc(d, qcount)});
         }
         else
         {
             results = (ctx.cfg.scoring == "bm25")
-                ? ctx.indexer.searchBM25Parallel(qtokens, topK * 10)
-                : ctx.indexer.searchTFIDF(qtokens, topK * 10);
+                          ? ctx.indexer.searchBM25Parallel(qtokens, topK * 10)
+                          : ctx.indexer.searchTFIDF(qtokens, topK * 10);
         }
         auto t1 = chrono::steady_clock::now();
         latencyMs = (uint64_t)chrono::duration_cast<chrono::milliseconds>(t1 - t0).count();
         ctx.metrics.observeQueryLatencyMs(latencyMs);
         ctx.metrics.observeQuery(false);
-        if (!cacheKey.empty()) ctx.cache->put(cacheKey, results);
+        if (!cacheKey.empty())
+            ctx.cache->put(cacheKey, results);
     }
 
-    if (!query.empty()) ctx.queryLog->record(query);
+    if (!query.empty())
+        ctx.queryLog->record(query);
 
     if (sortBy == "date")
         sort(results.begin(), results.end(), [&](auto &a, auto &b)
@@ -188,7 +205,8 @@ static string runSearch(const string &rawQuery, int topK,
         sort(results.begin(), results.end(), [](auto &a, auto &b)
              { return a.score > b.score; });
 
-    if ((int)results.size() > topK) results.resize(topK);
+    if ((int)results.size() > topK)
+        results.resize(topK);
 
     ostringstream js;
     js << "{" << jsonKV("query", query) << ","
@@ -202,7 +220,8 @@ static string runSearch(const string &rawQuery, int topK,
         const Document &d = ctx.indexer.getDoc(r.id);
         string snippet = ctx.indexer.makeSnippet(r.id, qtokens, 300);
         double score = isfinite(r.score) ? r.score : 0.0;
-        if (i) js << ",";
+        if (i)
+            js << ",";
         js << "{"
            << jsonKV("docID", to_string(r.id), false) << ","
            << jsonKV("path", d.path) << ","
@@ -242,8 +261,7 @@ void register_routes(httplib::Server &srv, EngineContext &ctx)
             res.set_content("{\"error\":\"username already exists\"}", "application/json");
             return;
         }
-        res.set_content("{\"status\":\"ok\"}", "application/json");
-    });
+        res.set_content("{\"status\":\"ok\"}", "application/json"); });
 
     // POST /auth/login
     srv.Post("/auth/login", [&ctx](const httplib::Request &req, httplib::Response &res)
@@ -266,8 +284,7 @@ void register_routes(httplib::Server &srv, EngineContext &ctx)
         std::string token = Auth::generateToken(username, role, ctx.jwtSecret);
         ostringstream js;
         js << "{" << jsonKV("token", token) << "," << jsonKV("role", role) << "}";
-        res.set_content(js.str(), "application/json");
-    });
+        res.set_content(js.str(), "application/json"); });
 
     // GET /search
     srv.Get("/search", [&ctx](const httplib::Request &req, httplib::Response &res)
@@ -298,8 +315,7 @@ void register_routes(httplib::Server &srv, EngineContext &ctx)
         } catch (...) {
             res.status = 500;
             res.set_content("{\"error\":\"unknown exception in search\"}", "application/json");
-        }
-    });
+        } });
 
     // GET /document/<id>
     srv.Get(R"(/document/(\d+))", [&ctx](const httplib::Request &req, httplib::Response &res)
@@ -322,8 +338,7 @@ void register_routes(httplib::Server &srv, EngineContext &ctx)
            << jsonKV("mtime",   to_string(d.mtime),     false) << ","
            << jsonKV("content", content)
            << "}";
-        res.set_content(js.str(), "application/json");
-    });
+        res.set_content(js.str(), "application/json"); });
 
     // GET /stats
     srv.Get("/stats", [&ctx](const httplib::Request &req, httplib::Response &res)
@@ -354,8 +369,7 @@ void register_routes(httplib::Server &srv, EngineContext &ctx)
            << jsonKV("query_log_size", to_string(ctx.queryLog->size()),              false) << ","
            << "\"top_terms\":" << termsArr.str()
            << "}";
-        res.set_content(js.str(), "application/json");
-    });
+        res.set_content(js.str(), "application/json"); });
 
     // GET /autocomplete
     srv.Get("/autocomplete", [&ctx](const httplib::Request &req, httplib::Response &res)
@@ -381,8 +395,7 @@ void register_routes(httplib::Server &srv, EngineContext &ctx)
             js << jsonStr(querySuggestions[i]);
         }
         js << "]}";
-        res.set_content(js.str(), "application/json");
-    });
+        res.set_content(js.str(), "application/json"); });
 
     // GET /popular
     srv.Get("/popular", [&ctx](const httplib::Request &req, httplib::Response &res)
@@ -400,8 +413,7 @@ void register_routes(httplib::Server &srv, EngineContext &ctx)
                << jsonKV("count", to_string(top[i].second), false) << "}";
         }
         js << "]}";
-        res.set_content(js.str(), "application/json");
-    });
+        res.set_content(js.str(), "application/json"); });
 
     // POST /index/rebuild
     srv.Post("/index/rebuild", [&ctx](const httplib::Request &req, httplib::Response &res)
@@ -427,8 +439,7 @@ void register_routes(httplib::Server &srv, EngineContext &ctx)
         js << "{" << jsonKV("status","ok") << ","
            << jsonKV("docs", to_string(ctx.indexer.numDocs()), false) << ","
            << jsonKV("elapsed_ms", to_string(ms), false) << "}";
-        res.set_content(js.str(), "application/json");
-    });
+        res.set_content(js.str(), "application/json"); });
 
     // POST /index/update
     srv.Post("/index/update", [&ctx](const httplib::Request &req, httplib::Response &res)
@@ -453,8 +464,7 @@ void register_routes(httplib::Server &srv, EngineContext &ctx)
         js << "{" << jsonKV("status","ok") << ","
            << jsonKV("docs", to_string(ctx.indexer.numDocs()), false) << ","
            << jsonKV("elapsed_ms", to_string(ms), false) << "}";
-        res.set_content(js.str(), "application/json");
-    });
+        res.set_content(js.str(), "application/json"); });
 
     // POST /crawl
     srv.Post("/crawl", [&ctx](const httplib::Request &req, httplib::Response &res)
@@ -474,6 +484,7 @@ void register_routes(httplib::Server &srv, EngineContext &ctx)
             return;
         }
         string outputDir = ctx.cfg.docsFolder + "/crawled";
+
         thread([&ctx, seedUrl, depth, pages, outputDir]() {
             CrawlerConfig ccfg;
             ccfg.maxPages  = pages;
@@ -481,28 +492,41 @@ void register_routes(httplib::Server &srv, EngineContext &ctx)
             ccfg.delayMs   = 500;
             ccfg.outputDir = outputDir;
             Crawler crawler(ccfg);
-            int crawled = crawler.crawl(seedUrl, [&ctx](const string &filepath) {
+
+            // Crawl without per-page callback — just save files
+            int crawled = crawler.crawl(seedUrl, nullptr);
+
+            Logger::instance().log(LINFO, "Crawl done: " + to_string(crawled) + " pages from " + seedUrl);
+
+            if (crawled == 0) return;
+
+            // After all files saved, sync the entire docs folder
+            {
                 lock_guard<mutex> lk(ctx.engineMu);
-                ctx.indexer.incrementalUpdateWithWAL(filepath, ctx.wal, false);
+                auto sr = ctx.indexer.syncFolder(ctx.cfg.docsFolder, true);
+                Logger::instance().log(LINFO, "Sync after crawl: +" + to_string(sr.added) + " docs");
+
+                // Save new docs to DB
                 if (ctx.db.isConnected()) {
-                    int docID = ctx.indexer.numDocs() - 1;
-                    if (docID >= 0) {
-                        const Document &d = ctx.indexer.getDoc(docID);
-                        string content = ctx.indexer.loadContent(docID);
+                    for (int i = 0; i < ctx.indexer.numDocs(); ++i) {
+                        const Document &d = ctx.indexer.getDoc(i);
+                        if (d.path.empty()) continue;
+                        string content = ctx.indexer.loadContent(i);
                         ctx.db.saveDocument(d.path, content, d.size_bytes, d.mtime);
                     }
                 }
-            });
-            if (!ctx.cfg.indexFile.empty()) ctx.indexer.saveIndex(ctx.cfg.indexFile);
-            Logger::instance().log(LINFO, "Crawl complete: " + to_string(crawled) + " pages from " + seedUrl);
+
+                if (!ctx.cfg.indexFile.empty())
+                    ctx.indexer.saveIndex(ctx.cfg.indexFile);
+            }
         }).detach();
+
         ostringstream js;
         js << "{" << jsonKV("status","crawl started") << ","
            << jsonKV("seed",      seedUrl)                 << ","
            << jsonKV("max_pages", to_string(pages), false) << ","
            << jsonKV("max_depth", to_string(depth), false) << "}";
-        res.set_content(js.str(), "application/json");
-    });
+        res.set_content(js.str(), "application/json"); });
 
     // GET /metrics
     srv.Get("/metrics", [&ctx](const httplib::Request &req, httplib::Response &res)
@@ -511,8 +535,7 @@ void register_routes(httplib::Server &srv, EngineContext &ctx)
         if (!checkRate(req, res, ctx)) return;
         if (!checkAuth(req, res, ctx)) return;
         res.set_header("Content-Type", "text/plain; charset=utf-8");
-        res.set_content(ctx.metrics.reportPrometheus(), "text/plain; charset=utf-8");
-    });
+        res.set_content(ctx.metrics.reportPrometheus(), "text/plain; charset=utf-8"); });
 
     // GET /health
     srv.Get("/health", [&ctx](const httplib::Request &, httplib::Response &res)
@@ -525,6 +548,5 @@ void register_routes(httplib::Server &srv, EngineContext &ctx)
            << jsonKV("queries", to_string(ctx.metrics.getQueries()), false) << ","
            << jsonKV("errors", to_string(ctx.metrics.getErrors()), false)
            << "}";
-        res.set_content(js.str(), "application/json");
-    });
+        res.set_content(js.str(), "application/json"); });
 }
