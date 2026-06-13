@@ -21,18 +21,25 @@ static string jsonStr(const string &s)
     out += '"';
     for (unsigned char c : s)
     {
-        if (c == '"') out += "\\\"";
-        else if (c == '\\') out += "\\\\";
-        else if (c == '\n') out += "\\n";
-        else if (c == '\r') out += "\\r";
-        else if (c == '\t') out += "\\t";
-        else if (c < 0x20) {
+        if (c == '"')
+            out += "\\\"";
+        else if (c == '\\')
+            out += "\\\\";
+        else if (c == '\n')
+            out += "\\n";
+        else if (c == '\r')
+            out += "\\r";
+        else if (c == '\t')
+            out += "\\t";
+        else if (c < 0x20)
+        {
             // Escape all other control characters as \uXXXX
             char buf[8];
             snprintf(buf, sizeof(buf), "\\u%04x", c);
             out += buf;
         }
-        else out += c;
+        else
+            out += c;
     }
     out += '"';
     return out;
@@ -133,6 +140,31 @@ static bool isValidInput(const string &s, size_t maxLen = 512)
     return s.size() <= maxLen;
 }
 
+static string cleanPath(const string &path)
+{
+    // Extract just the filename without internal server path
+    auto pos = path.rfind('/');
+    if (pos == string::npos)
+        return path;
+    string filename = path.substr(pos + 1);
+    // Remove .txt extension
+    if (filename.size() > 4 && filename.substr(filename.size() - 4) == ".txt")
+        filename = filename.substr(0, filename.size() - 4);
+    // Decode crawled URLs: http___example.com -> http://example.com
+    size_t p = 0;
+    while ((p = filename.find("___", p)) != string::npos)
+    {
+        filename.replace(p, 3, "://");
+        p += 3;
+    }
+    while ((p = filename.find("__", p)) != string::npos)
+    {
+        filename.replace(p, 2, "/");
+        p += 2;
+    }
+    return filename;
+}
+
 static string runSearch(const string &rawQuery, int topK,
                         const string &sortBy,
                         EngineContext &ctx,
@@ -224,7 +256,7 @@ static string runSearch(const string &rawQuery, int topK,
             js << ",";
         js << "{"
            << jsonKV("docID", to_string(r.id), false) << ","
-           << jsonKV("path", d.path) << ","
+           << jsonKV("path", cleanPath(d.path)) << ","
            << jsonKV("score", to_string(score), false) << ","
            << jsonKV("size", to_string(d.size_bytes), false) << ","
            << jsonKV("mtime", to_string(d.mtime), false) << ","
