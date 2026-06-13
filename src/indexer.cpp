@@ -284,10 +284,10 @@ void Indexer::buildFromDocuments(const vector<Document> &dbDocs)
         if (!dbDocs[i].content.empty())
         {
             lock_guard<mutex> lk(contentCacheMu);
-            contentCache[i] = dbDocs[i].content;
+            contentCache[(int)i] = dbDocs[i].content;
         }
-        unordered_map<const string *, vector<int>> local;
 
+        unordered_map<const string *, vector<int>> local;
         vector<string> tokens;
         if (tokenizer)
             tokens = tokenizer->tokenize(dbDocs[i].content);
@@ -341,7 +341,6 @@ void Indexer::buildFromDocuments(const vector<Document> &dbDocs)
     buildVocabStructures();
     Logger::instance().log(LINFO, "buildFromDocuments: indexed " + to_string(N) + " docs from DB");
 }
-
 void Indexer::buildFromFolderParallel(const string &folder, bool recursive)
 {
     Logger::instance().log(LINFO, "Starting parallel indexing on: " + folder);
@@ -1465,10 +1464,6 @@ void Indexer::buildVocabStructures()
 // ---------------------- Lazy content load ----------------------
 string Indexer::loadContent(int docID) const
 {
-    const string &path = docs.at(docID).path;
-    if (path.empty() || !fs::exists(path))
-        return "";
-
     // Check cache first
     {
         lock_guard<mutex> lk(contentCacheMu);
@@ -1477,17 +1472,16 @@ string Indexer::loadContent(int docID) const
             return it->second;
     }
 
-    // Load from disk
-    string content = loadFileContent(path);
+    // Try disk
+    const string &path = docs.at(docID).path;
+    if (path.empty() || !fs::exists(path))
+        return "";
 
-    // Store in cache, evict oldest if over limit
+    string content = loadFileContent(path);
     {
         lock_guard<mutex> lk(contentCacheMu);
         if ((int)contentCache.size() >= kContentCacheMax)
-        {
-            // Simple eviction: remove first entry
             contentCache.erase(contentCache.begin());
-        }
         contentCache[docID] = content;
     }
     return content;
