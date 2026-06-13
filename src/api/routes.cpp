@@ -19,20 +19,20 @@ static string jsonStr(const string &s)
     string out;
     out.reserve(s.size() + 2);
     out += '"';
-    for (char c : s)
+    for (unsigned char c : s)
     {
-        if (c == '"')
-            out += "\\\"";
-        else if (c == '\\')
-            out += "\\\\";
-        else if (c == '\n')
-            out += "\\n";
-        else if (c == '\r')
-            out += "\\r";
-        else if (c == '\t')
-            out += "\\t";
-        else
-            out += c;
+        if (c == '"') out += "\\\"";
+        else if (c == '\\') out += "\\\\";
+        else if (c == '\n') out += "\\n";
+        else if (c == '\r') out += "\\r";
+        else if (c == '\t') out += "\\t";
+        else if (c < 0x20) {
+            // Escape all other control characters as \uXXXX
+            char buf[8];
+            snprintf(buf, sizeof(buf), "\\u%04x", c);
+            out += buf;
+        }
+        else out += c;
     }
     out += '"';
     return out;
